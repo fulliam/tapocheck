@@ -1,0 +1,112 @@
+.settings {
+    padding: 5px;
+    margin: 5px;
+    width: 400px;
+
+    &.menu {
+        text-shadow: 0px 0px 10px #000;
+
+        & ul {
+            list-style: none;
+            padding-left: 0;
+            display: grid;
+            justify-content: center;
+
+            & li {
+                cursor: pointer;
+                display: grid;
+                margin: 10px;
+            }
+
+            & button {
+                cursor: pointer;
+                border: none;
+                width: 250px;
+                height: 30px;
+                font-family: "Press start 2P";
+                color: #e7fc5c;
+                background-color: #00b389;
+
+                & .name {
+                    display: flex;
+                    justify-content: center;
+
+                    & .letter {
+                        font-size: 28px;
+                        display: inline-block;
+                        text-shadow: none;
+
+                        &:nth-child(1) {
+                            animation: slide-reverse 6s linear infinite;
+                        }
+                        &:nth-child(2) {
+                            animation: slide-reverse 1.5s linear infinite;
+                        }
+                        &:nth-child(3) {
+                            animation: slide-reverse 3s linear infinite;
+                        }
+                        &:nth-child(4) {
+                            animation: slide-reverse 6s linear infinite;
+                        }
+                        &:nth-child(5) {
+                            animation: slide-reverse 1.5s linear infinite;
+                        }
+                        &:nth-child(6) {
+                            animation: slide-reverse 6s linear infinite;
+                        }
+                        &:nth-child(7) {
+                            animation: slide-reverse 3s linear infinite;
+                        }
+                        &:nth-child(8) {
+                            animation: slide-reverse 1.5s linear infinite;
+                        }
+                    }
+
+                    &:hover {
+                        animation: none;
+
+                        & .letter {
+                            animation: none;
+                        }
+                    }
+                }
+
+                &:hover {
+                    color: #0ef372;
+                    background-color: #029a44;
+
+                    & .letter {
+                        text-shadow: 5px 5px 0px rgb(160, 1, 1);
+                    }
+                }
+            }
+        }
+    }
+
+    & h2 {
+        color: rgba(254, 82, 110, 0.848);
+        text-align: start;
+    }
+
+    & .sound {
+
+    }
+}
+
+@keyframes slide-reverse {
+    0% {
+        transform: scaleX(1);
+    }
+    25% {
+        transform: scaleX(0);
+    }
+    50% {
+        transform: scaleX(-1);
+    }
+    75% {
+        transform: scaleX(0);
+    }
+    100% {
+        transform: scaleX(1);
+    }
+}

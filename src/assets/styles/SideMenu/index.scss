@@ -1,0 +1,125 @@
+$modalBgIcon: #1e1e1e;
+$modalText:  rgb(200, 180, 0);
+.side-menu-nav {
+    display: contents;
+    position: absolute;
+}
+
+a {
+    font-weight: bold;
+    color: $modalText;
+    text-decoration: none;
+    margin: 10px;
+
+    &.router-link-exact-active {
+        color: $modalText;
+    }
+}
+.side-menu {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 9999;
+}
+
+.side-menu--visible {
+    pointer-events: auto;
+}
+
+.app-menu {
+    background-color: #fff;
+    color: #fff;
+    position: relative;
+    max-width: 400px;
+    width: 90%;
+    height: 100%;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    -webkit-transform: translateX(-103%);
+            transform: translateX(-103%);
+    display: flex;
+    flex-direction: column;
+    will-change: transform;
+    z-index: 160;
+    pointer-events: auto;
+}
+
+.side-menu--visible .app-menu {
+    -webkit-transform: none;
+            transform: none;
+}
+
+.side-menu--animatable .app-menu {
+    transition: all 130ms ease-in;
+}
+
+.side-menu--visible.side-menu--animatable  .app-menu {
+    transition: all 330ms ease-out;
+}
+
+.side-menu:after {
+    content: '';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    opacity: 0;
+    will-change: opacity;
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0,0,0.3,1);
+}
+
+.side-menu--visible.side-menu:after {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.side-menu-icon {
+  cursor: pointer;
+  content: "Menu";
+  z-index: 99;
+  color: $modalText;
+  background-color: $modalBgIcon;
+  width: 52px;
+  height: 32px;
+  border-radius: 20px;
+  border: 2px solid $modalText;
+  margin: 10px;
+  top: 1%;
+  left: 1%;
+  position: fixed;
+  transition: 0.5s all;
+
+  & span {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    height: 5px;
+    top: -9px;
+    position: relative;
+  }
+}
+
+.side-menu-icon:hover {
+  border-color: #d5842d;
+  color: #d5842d;
+}
+
+.app-menu {
+  width: 300px;
+  height: 100%;
+  box-shadow: none;
+  background-color: #19614c;
+}
+
+.side-menu:after {
+  width: 100%;
+  height: 100%;
+}
