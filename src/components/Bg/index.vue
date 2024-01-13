@@ -10,34 +10,15 @@
 
         <template v-slot:enemy>
           <EnemyCharacter
-            :enemyId="'war'"
-            :initialCharacter="'Dragon'"
-            :initialPositionX="1100"
-            :initialHealth="30"
-            :initialMaxHealth="30"
-            :initialAttack="2"
-            :currentAct="getCurrentAct()"
-            :attackRange="150"
-          />
-          <EnemyCharacter
-            :enemyId="'war3'"
-            :initialCharacter="'Warrior'"
-            :initialPositionX="1900"
-            :initialHealth="35"
-            :initialMaxHealth="35"
-            :initialAttack="2"
-            :currentAct="getCurrentAct()"
-            :attackRange="210"
-          />
-          <EnemyCharacter
-            :enemyId="'war4'"
-            :initialCharacter="'Warrior'"
-            :initialPositionX="2600"
-            :initialHealth="35"
-            :initialMaxHealth="35"
-            :initialAttack="2"
-            :currentAct="getCurrentAct()"
-            :attackRange="210"
+            v-for="(enemy, index) in getEnemiesForCurrentAct()"
+            :key="`enemy-${index}`"
+            :enemyId="enemy.enemyId"
+            :initialCharacter="enemy.initialCharacter"
+            :initialPositionX="enemy.initialPositionX"
+            :initialHealth="enemy.initialHealth"
+            :initialMaxHealth="enemy.initialMaxHealth"
+            :initialAttack="enemy.initialAttack"
+            :attackRange="enemy.attackRange"
           />
         </template>
 
@@ -59,6 +40,7 @@
 <script>
 import emitter from '@/eventBus';
 import actsData from './scenes';
+import enemies from './enemies';
 import ActComponent from './Act/index.vue';
 import ControlCharacter from '../Char/ControlCharacter/index.vue';
 import EnemyCharacter from '../Char/EnemyCharacter/index.vue';
@@ -70,6 +52,7 @@ export default {
       currentActIndex: 0,
       currentActKey: 'act-ActI',
       actsData,
+      enemies,
     };
   },
   components: {
@@ -90,6 +73,10 @@ export default {
   methods: {
     getCurrentAct() {
       return Object.keys(this.actsData)[this.currentActIndex];
+    },
+
+    getEnemiesForCurrentAct() {
+      return this.enemies[this.getCurrentAct()] || [];
     },
 
     nextAct() {

@@ -12,6 +12,7 @@
     :styleEnemy="styleEnemyInAct"
     :state="enemyState"
     :animationSpeed="enemyAnimationSpeed"
+    :enemyId="enemyId"
   />
 </template>
 
@@ -273,7 +274,7 @@ export default {
           this.enemyState = 'dead';
           this.health = 0;
 
-          emitter.emit('enemy-dead' /* , this.enemyId */);
+          emitter.emit('enemy-dead', this.enemyId);
         }
       }
     },

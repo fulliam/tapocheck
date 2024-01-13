@@ -12,7 +12,7 @@ import emitter from '@/eventBus';
 
 export default {
   name: 'ImgEnemyCharacter',
-  props: ['images', 'direction', 'jump', 'positionX', 'styleEnemy', 'state', 'animationSpeed'],
+  props: ['images', 'direction', 'jump', 'positionX', 'styleEnemy', 'state', 'animationSpeed', 'enemyId'],
   data() {
     return {
       currentImageIndex: 0,
@@ -53,9 +53,11 @@ export default {
     updateCharacterPosition(x) {
       this.position.x = x;
     },
-    handleDeath() {
-      this.stopAnimation();
-      this.currentImageIndex = this.images.length - 1;
+    handleDeath(enemyId) {
+      if (this.enemyId === enemyId) {
+        this.stopAnimation();
+        this.currentImageIndex = (this.images?.length ?? 0) - 1;
+      }
     },
   },
   computed: {
