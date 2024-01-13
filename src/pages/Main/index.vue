@@ -33,6 +33,7 @@
         </div>
       </div>
       <button @click="switchEnemyCharacter">Switch Enemy</button>
+      <button @click="refreshEnemyHealth">🗘</button>
     </ContextMenu>
   </div>
 </template>
@@ -79,6 +80,9 @@ export default {
     },
     updateRunningSpeed() {
       emitter.emit('update-running-speed', this.runningSpeed);
+    },
+    refreshEnemyHealth() {
+      emitter.emit('refresh-enemy-health');
     },
   },
 };

@@ -1,7 +1,7 @@
 <template>
   <div class="act-container">
-    <slot name="character" :scene="styledScene"></slot>
     <slot name="enemy" :scene="styledScene"></slot>
+    <slot name="character" :scene="styledScene"></slot>
 
     <div
       v-for="(styledScene, index) in styledScenes"

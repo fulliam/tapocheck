@@ -2,10 +2,9 @@
   <img
     :src="currentImage"
     alt=" "
-    :style="[direction, jump, characterPosition]"
+    :style="[direction, characterPosition, styleChar]"
     class="character"
   >
-  <div class="hitbox" :style="[hitboxPosition]"></div>
 </template>
 
 <script>
@@ -13,24 +12,30 @@ import emitter from '@/eventBus';
 
 export default {
   name: 'ImgCharacter',
-  props: ['images', 'direction', 'jump'],
+  props: ['images', 'direction', 'styleChar', 'state'],
   data() {
     return {
       currentImageIndex: 0,
       animationIntervalId: null,
-      position: {
-        hitbox: {
-          x: 0,
-        },
-      },
+      positionX: 0,
     };
   },
   mounted() {
-    emitter.on('update-position', this.updateCharacterPosition);
+    emitter.on('update:char-positionX', this.updateCharacterPositionX);
+    emitter.on('character-dead', this.handleDeath);
     this.startAnimation();
   },
   beforeUnmount() {
+    emitter.off('update:char-positionX', this.updateCharacterPositionX);
+    emitter.off('character-dead', this.handleDeath);
     this.stopAnimation();
+  },
+  watch: {
+    state(newVal, oldVal) {
+      if (newVal === 'dead' && oldVal !== 'dead') {
+        this.handleDeath();
+      }
+    },
   },
   methods: {
     startAnimation() {
@@ -42,8 +47,12 @@ export default {
     changeImage() {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
     },
-    updateCharacterPosition(x) {
-      this.position.hitbox.x = x;
+    updateCharacterPositionX(newPositionX) {
+      this.positionX = newPositionX;
+    },
+    handleDeath() {
+      this.stopAnimation();
+      this.currentImageIndex = this.images.length - 1;
     },
   },
   computed: {
@@ -52,12 +61,7 @@ export default {
     },
     characterPosition() {
       return {
-        left: `${this.position.hitbox.x}px`, bottom: '25%',
-      };
-    },
-    hitboxPosition() {
-      return {
-        left: `${(this.position.hitbox.x + 130)}px`, bottom: '23%',
+        left: `${this.positionX}px`,
       };
     },
   },
@@ -70,14 +74,5 @@ export default {
   z-index: 10;
   will-change: transform;
   height: 50%;
-}
-
-.hitbox {
-  position: absolute;
-  z-index: 10;
-  will-change: transform;
-  height: 280px;
-  width: 180px;
-  border: 3px solid violet;
 }
 </style>

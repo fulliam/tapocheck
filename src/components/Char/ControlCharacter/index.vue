@@ -1,19 +1,15 @@
 <template>
-  <div class="health-bar-outer" :style="{left: (hitbox.x + 120) + 'px'}">
-    Char
-    <div class="character-statistics">
-      Pos X: {{ hitbox.x }}
-    </div>
+  <div class="health-bar-outer">
     <div class="health-bar-inner" :style="{width: healthPercentage + '%'}">
-      {{ healthPercentage }}%
+      <span>{{ health }}/{{ maxHealth }}</span>
     </div>
   </div>
   <ImgCharacter
     :key="currentCharacter"
     :images="selectedImages"
     :direction="charDirection"
-    :position="charPosition"
-    :jump="charJump"
+    :styleChar="styleCharInAct"
+    :state="keyPressed"
   />
 </template>
 
@@ -37,7 +33,7 @@ export default {
       screenWidth: window.innerWidth,
 
       scrollInterval: null,
-      currentCharacter: ArcherAnimations,
+      currentCharacter: WizardAnimations,
       characters: [
         ArcherAnimations,
         WizardAnimations,
@@ -53,17 +49,19 @@ export default {
       walkingSpeed: 6,
       runningSpeed: 15,
 
-      maxHealth: 100,
-      health: 100,
-      hitbox: {
-        x: 0,
-      },
+      maxHealth: 1000,
+      health: 1000,
+      positionX: 0,
 
       attacks: {
-        attack: { damage: 5 },
+        attack: { damage: 8 },
         attack2: { damage: 10 },
-        attack3: { damage: 15 },
+        attack3: { damage: 16 },
       },
+      attackInterval: null,
+      attackCooldown: 500, // 1 in 500 ms.
+
+      enemyId: null,
     };
   },
   computed: {
@@ -89,38 +87,21 @@ export default {
           return [];
       }
     },
+
     charDirection() {
       return {
         transform: this.isFacingLeft ? 'scale(-1, 1)' : 'none',
       };
     },
-    charJump() {
-      return {
-        bottom: this.isJumping ? '50px' : '0',
-      };
-    },
-    charPosition() {
-      if (this.currentAct === 'ActVI') {
-        return {
-          char: {
-            top: '40%',
-          },
-          hitbox: {
-            bottom: '10%',
-          },
-        };
-      }
-      return {
-        char: {
-          top: '20%',
-        },
-        hitbox: {
-          bottom: '30%',
-        },
-      };
-    },
+
     healthPercentage() {
       return (this.health / this.maxHealth) * 100;
+    },
+
+    styleCharInAct() {
+      return {
+        bottom: this.currentAct === 'ActVI' ? '10%' : '25%',
+      };
     },
   },
   mounted() {
@@ -129,6 +110,7 @@ export default {
     emitter.on('switch-character', this.switchCharacter);
     emitter.on('update-walking-speed', this.updateWalkingSpeed);
     emitter.on('update-running-speed', this.updateRunningSpeed);
+    emitter.on('enemy-attack', this.applyDamage);
   },
   beforeUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
@@ -136,6 +118,7 @@ export default {
     emitter.off('switch-character', this.switchCharacter);
     emitter.off('update-walking-speed', this.updateWalkingSpeed);
     emitter.off('update-running-speed', this.updateRunningSpeed);
+    emitter.off('enemy-attack', this.applyDamage);
 
     if (this.scrollInterval) {
       clearInterval(this.scrollInterval);
@@ -147,20 +130,20 @@ export default {
       const direction = this.isFacingLeft ? 'left' : 'right';
 
       emitter.emit('character-attack', {
-        x: this.hitbox.x,
-        attackType,
         damage: attack.damage,
+        enemyId: this.enemyId,
         direction,
       });
     },
 
-    applyDamage(damage) {
+    applyDamage({ damage, enemyId }) {
+      this.enemyId = enemyId;
       this.health -= damage;
       if (this.health <= 0) {
         this.keyPressed = 'dead';
         this.health = 0;
 
-        emitter.emit('character-dead', this.currentCharacter);
+        emitter.emit('character-dead' /* who is dead? */);
       }
     },
 
@@ -207,6 +190,7 @@ export default {
       const { keyPressed } = this;
 
       const speed = isShiftPressed ? this.runningSpeed : this.walkingSpeed;
+
       let direction = null;
 
       if (event.code === 'ArrowRight') {
@@ -222,12 +206,12 @@ export default {
       if (direction) {
         if (!this.scrollInterval) {
           this.scrollInterval = setInterval(() => {
-            const proposedX = this.hitbox.x + (((this.isFacingLeft ? -1 : 1) * speed) / 4);
+            const proposedX = this.positionX + (((this.isFacingLeft ? -1 : 1) * speed) / 4);
             if (proposedX >= 0 && proposedX <= this.screenWidth - 100) {
-              this.hitbox.x = proposedX;
+              this.positionX = proposedX;
             }
-            this.updateCharacterPosition();
-            this.$emit('update:position', direction, speed);
+            this.updateCharacterPositionX();
+            emitter.emit('update:position', { direction, speed, playerPositionX: this.positionX });
           }, 20);
         }
       }
@@ -236,7 +220,12 @@ export default {
         this.prevKeyPressed = isShiftPressed && keyPressed === 'idle' ? 'attack' : keyPressed;
         this.keyPressed = isShiftPressed ? 'attack2' : 'attack';
 
-        this.performAttack(isShiftPressed ? 'attack2' : 'attack');
+        if (!this.attackInterval) {
+          this.attackInterval = setInterval(() => {
+            this.performAttack(isShiftPressed ? 'attack2' : 'attack');
+          }, this.attackCooldown);
+        }
+
         return;
       }
 
@@ -279,12 +268,12 @@ export default {
       }
     },
 
-    updateCharacterPosition() {
+    updateCharacterPositionX() {
       const minHitboxX = 0;
       const maxHitboxX = this.screenWidth - 300;
 
-      this.hitbox.x = Math.max(minHitboxX, Math.min(this.hitbox.x, maxHitboxX));
-      emitter.emit('update-position', this.hitbox.x);
+      this.positionX = Math.max(minHitboxX, Math.min(this.positionX, maxHitboxX));
+      emitter.emit('update:char-positionX', this.positionX);
     },
 
     updateAnimationState() {
@@ -316,18 +305,28 @@ export default {
 <style lang="scss">
 .health-bar-outer {
   position: absolute;
-  top: 40%; /* Position the health bar above the character */
-  width: 200px; /* Fixed width or relative to character size */
-  height: 10px;
-  background-color: grey; /* Background color representing lost health */
-  border: 1px solid black;
-  z-index: 999;
+  top: 3%;
+  left: 15%;
+  width: 300px;
+  height: 20px;
+  background-color: rgba(34, 7, 7, 0.444);
+  border: 3px solid black;
+  border-radius: 7px;
+  z-index: 99;
   color: white;
 }
 
 .health-bar-inner {
   height: 100%;
-  background-color: green; /* Foreground color representing current health */
+  border-radius: 3px;
+  background-color: rgb(2, 189, 2);
+
+  & span {
+    white-space: nowrap;
+    position: relative;
+    left: -25%;
+    top: 2px;
+  }
 }
 
 </style>
