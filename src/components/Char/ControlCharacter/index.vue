@@ -162,6 +162,11 @@ export default {
         return;
       }
 
+      if (event.code === 'Space') {
+        clearInterval(this.attackInterval);
+        this.attackInterval = null;
+      }
+
       if (event.code === 'ArrowRight' || event.code === 'ArrowLeft') {
         clearInterval(this.scrollInterval);
         this.scrollInterval = null;
