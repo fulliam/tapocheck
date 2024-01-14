@@ -49,16 +49,21 @@
             />
         </div>
     </div>
+    <BgDecorations/>
 </template>
 
 <script>
 import { BgParts } from '@/assets/bg/Backgrounds';
+import BgDecorations from '@/components/Bg/Decorations/index.vue';
 
 export default {
   data() {
     return {
       BgParts,
     };
+  },
+  components: {
+    BgDecorations,
   },
 };
 </script>
@@ -81,8 +86,8 @@ export default {
     display: flex;
     top: 0;
     left: 0;
-    height: 50%;
-    width: 50%;
-    margin: 40px;
+    height: 100%;
+    width: 100%;
+    margin: 10px;
 }
 </style>

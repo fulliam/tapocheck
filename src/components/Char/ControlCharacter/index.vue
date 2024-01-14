@@ -88,6 +88,10 @@ export default {
       }
     },
 
+    animationLen() {
+      return this.currentCharacter[this.keyPressed].length;
+    },
+
     charDirection() {
       return {
         transform: this.isFacingLeft ? 'scale(-1, 1)' : 'none',
@@ -228,7 +232,7 @@ export default {
         if (!this.attackInterval) {
           this.attackInterval = setInterval(() => {
             this.performAttack(isShiftPressed ? 'attack2' : 'attack');
-          }, this.attackCooldown);
+          }, this.animationLen * 100);
         }
 
         return;
@@ -308,30 +312,5 @@ export default {
 </script>
 
 <style lang="scss">
-.health-bar-outer {
-  position: absolute;
-  top: 3%;
-  left: 15%;
-  width: 300px;
-  height: 20px;
-  background-color: rgba(34, 7, 7, 0.444);
-  border: 3px solid black;
-  border-radius: 7px;
-  z-index: 99;
-  color: white;
-}
-
-.health-bar-inner {
-  height: 100%;
-  border-radius: 3px;
-  background-color: rgb(2, 189, 2);
-
-  & span {
-    white-space: nowrap;
-    position: relative;
-    left: -25%;
-    top: 2px;
-  }
-}
-
+@import url('@/assets/char/hpbar/index.scss');
 </style>

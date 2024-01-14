@@ -3,7 +3,7 @@
     :src="currentImage"
     alt=" "
     :style="[direction, jump, characterPosition, styleEnemy]"
-    class="character"
+    class="enemy"
   >
 </template>
 
@@ -25,11 +25,13 @@ export default {
   mounted() {
     emitter.on('update-enemy-position', this.updateCharacterPosition);
     emitter.on('enemy-dead', this.handleDeath);
+    emitter.on('refresh-enemy', this.refreshEnemy);
     this.startAnimation();
   },
   beforeUnmount() {
     emitter.off('update-enemy-position', this.updateCharacterPosition);
     emitter.off('enemy-dead', this.handleDeath);
+    emitter.off('refresh-enemy', this.refreshEnemy);
     this.stopAnimation();
   },
   watch: {
@@ -59,6 +61,11 @@ export default {
         this.currentImageIndex = (this.images?.length ?? 0) - 1;
       }
     },
+    refreshEnemy(enemyId) {
+      if (this.enemyId === enemyId) {
+        this.startAnimation();
+      }
+    },
   },
   computed: {
     currentImage() {
@@ -74,7 +81,7 @@ export default {
 </script>
 
 <style lang="scss">
-.character {
+.enemy {
   position: absolute;
   z-index: 10;
   will-change: transform;

@@ -293,6 +293,8 @@ export default {
 
     refreshEnemyHealth() {
       this.health = 100;
+      this.enemyStateInterval = setInterval(this.installEnemyState, 100);
+      emitter.emit('refresh-enemy', this.enemyId);
     },
 
     changeState(newState) {
