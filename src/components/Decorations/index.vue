@@ -18,11 +18,20 @@
     <ImgDecorations
         :images="DecorationAnimations.smoke"
     />
+    <ImgDecorations
+        :images="DecorationAnimations.effect.runSmoke"
+    />
+    <ImgDecorations
+        :images="DecorationAnimations.effect.groundSmoke"
+    />
+    <ImgDecorations
+        :images="DecorationAnimations.effect.poof"
+    />
   </div>
 </template>
 
 <script>
-import { DecorationAnimations } from '@/assets/bg/decorations/DecorationAnimations';
+import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 import ImgDecorations from './ImgDecorations/index.vue';
 
 export default {

@@ -24,4 +24,4 @@ const ArcherAnimations = {
 };
 
 export { ArcherAnimations };
-/* eslint-enaable */
+/* eslint-enable */

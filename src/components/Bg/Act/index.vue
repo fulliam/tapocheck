@@ -1,6 +1,6 @@
 <template>
   <div class="act-container">
-    <slot name="decoration" :scene="styledScene"></slot>
+    <slot name="currencies" :scene="styledScene"></slot>
     <slot name="enemy" :scene="styledScene"></slot>
     <slot name="character" :scene="styledScene"></slot>
 

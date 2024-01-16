@@ -11,6 +11,13 @@
     :styleChar="styleCharInAct"
     :state="keyPressed"
   />
+  <ImgDecorations
+    :isActive="keyPressed === 'run'? true : false"
+    :images="DecorationAnimations.effect.runSmoke"
+    :styleDecoration="styleCharInAct"
+    :charPosition="positionX"
+    :direction="isFacingLeft"
+  />
 </template>
 
 <script>
@@ -20,12 +27,16 @@ import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnima
 import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
 import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations';
 import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
+import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimations';
+import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
+import ImgDecorations from '@/components/Decorations/ImgDecorations/index.vue';
 import ImgCharacter from './ImgCharacter/index.vue';
 
 export default {
   name: 'ControlCharacter',
   components: {
     ImgCharacter,
+    ImgDecorations,
   },
   props: ['currentAct'],
   data() {
@@ -33,6 +44,7 @@ export default {
       screenWidth: window.innerWidth,
 
       scrollInterval: null,
+      DecorationAnimations,
       currentCharacter: WizardAnimations,
       characters: [
         ArcherAnimations,
@@ -40,6 +52,7 @@ export default {
         SwordsmanAnimations,
         PaladinAnimations,
         WarriorAnimations,
+        SkeletonAnimations,
       ],
       keyPressed: 'idle',
       prevKeyPressed: 'idle',
@@ -198,7 +211,7 @@ export default {
       const isShiftPressed = event.shiftKey;
       const { keyPressed } = this;
 
-      const speed = isShiftPressed ? this.runningSpeed : this.walkingSpeed;
+      let speed = this.walkingSpeed;
 
       let direction = null;
 
@@ -213,8 +226,12 @@ export default {
       }
 
       if (direction) {
+        this.keyPressed = isShiftPressed ? 'run' : 'walk';
+        speed = isShiftPressed ? this.runningSpeed : this.walkingSpeed;
+
         if (!this.scrollInterval) {
           this.scrollInterval = setInterval(() => {
+            speed = this.keyPressed === 'run' ? this.runningSpeed : this.walkingSpeed;
             const proposedX = this.positionX + (((this.isFacingLeft ? -1 : 1) * speed) / 4);
             if (proposedX >= 0 && proposedX <= this.screenWidth - 100) {
               this.positionX = proposedX;
@@ -231,6 +248,9 @@ export default {
 
         if (!this.attackInterval) {
           this.attackInterval = setInterval(() => {
+            if (this.scrollInterval) {
+              clearInterval(this.scrollInterval);
+            }
             this.performAttack(isShiftPressed ? 'attack2' : 'attack');
           }, this.animationLen * 100);
         }

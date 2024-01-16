@@ -54,7 +54,7 @@
 
 <script>
 import { BgParts } from '@/assets/bg/Backgrounds';
-import BgDecorations from '@/components/Bg/Decorations/index.vue';
+import BgDecorations from '@/components/Decorations/index.vue';
 
 export default {
   data() {

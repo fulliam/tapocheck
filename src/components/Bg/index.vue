@@ -1,12 +1,22 @@
 <template>
     <div class="game-container">
-      <!-- may be I can use v-show? -->
       <ActComponent
         ref="act"
-        v-if="Object.keys(actsData)[currentActIndex]"
+        v-show="Object.keys(actsData)[currentActIndex]"
         :key="currentActKey"
         :scenes="actsData[Object.keys(actsData)[currentActIndex]]"
       >
+        <template v-slot:currencies>
+          <ImgCurrencies
+            v-for="(currency, index) in getCurrenciesForCurrentAct()"
+            :key="`currency-${index}`"
+            :currencyId="`${currency.currencyId}-${index}`"
+            :positionX="currency.initialPositionX"
+            :images="currency.images"
+            :currentAct="getCurrentAct()"
+            :value="currency.value"
+          />
+        </template>
 
         <template v-slot:enemy>
           <EnemyCharacter
@@ -39,26 +49,32 @@
 
 <script>
 import emitter from '@/eventBus';
+import { CurrenciesAnimations } from '@/assets/currencies/CurrenciesAnimations';
 import actsData from './scenes';
 import enemies from './enemies';
+import currencies from './currencies';
 import ActComponent from './Act/index.vue';
 import ControlCharacter from '../Char/ControlCharacter/index.vue';
 import EnemyCharacter from '../Char/EnemyCharacter/index.vue';
+import ImgCurrencies from '../Currencies/index.vue';
 
 export default {
   name: 'ActView',
   data() {
     return {
+      CurrenciesAnimations,
       currentActIndex: 0,
       currentActKey: 'act-ActI',
       actsData,
       enemies,
+      currencies,
     };
   },
   components: {
     ActComponent,
     ControlCharacter,
     EnemyCharacter,
+    ImgCurrencies,
   },
   mounted() {
     emitter.on('prevAct', this.prevAct);
@@ -77,6 +93,10 @@ export default {
 
     getEnemiesForCurrentAct() {
       return this.enemies[this.getCurrentAct()] || [];
+    },
+
+    getCurrenciesForCurrentAct() {
+      return this.currencies[this.getCurrentAct()] || [];
     },
 
     nextAct() {

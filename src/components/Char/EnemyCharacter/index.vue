@@ -64,9 +64,8 @@ export default {
     },
     attackRange: {
       type: Number,
-      default: 230, // Значение по умолчанию, если не передано
+      default: 230,
     },
-    // ... и так далее для всех ключевых переменных
   },
   data() {
     return {
