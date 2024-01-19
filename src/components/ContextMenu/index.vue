@@ -1,13 +1,13 @@
 <template>
-    <div
-      class="context-menu"
-      v-if="isVisible"
-      :style="{ top: `${menuPosition.y}px`, left: `${menuPosition.x}px` }"
-      @contextmenu.prevent="$emit('close-menu')"
-    >
-        <button @click="closeMenu">✖</button>
-        <slot></slot>
-    </div>
+  <div
+    class="context-menu"
+    v-if="isVisible"
+    :style="{ top: `${menuPosition.y}px`, left: `${menuPosition.x}px` }"
+    @contextmenu.prevent="$emit('close-menu')"
+  >
+    <button @click="closeMenu">✖</button>
+    <slot></slot>
+  </div>
 </template>
 
 <script>
@@ -56,12 +56,12 @@ export default {
 
 <style lang="scss">
 .context-menu {
-    background-color: rgba(44, 35, 35, 0.44);
-    border: 2px solid rgb(200, 180, 0);
-    border-radius: 20px;
-    position: absolute;
-    z-index: 1020;
-    width: 300px;
-    height: 350px;
+  background-color: rgba(44, 35, 35, 0.44);
+  border: 2px solid rgb(200, 180, 0);
+  border-radius: 20px;
+  position: absolute;
+  z-index: 1020;
+  width: 300px;
+  height: 350px;
 }
 </style>

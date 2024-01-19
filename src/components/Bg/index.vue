@@ -39,10 +39,15 @@
         </template>
       </ActComponent>
 
-      <div class="ribbon">
-        <span>
-          {{ Object.keys(actsData)[currentActIndex] }}
-        </span>
+      <div
+        class="loading-overlay"
+        v-if="isLoading"
+      >
+        <div class="ribbon">
+          <span>
+            {{ Object.keys(actsData)[currentActIndex] }}
+          </span>
+        </div>
       </div>
     </div>
 </template>
@@ -68,6 +73,7 @@ export default {
       actsData,
       enemies,
       currencies,
+      isLoading: true,
     };
   },
   components: {
@@ -77,6 +83,7 @@ export default {
     ImgCurrencies,
   },
   mounted() {
+    this.setLoadingState();
     emitter.on('prevAct', this.prevAct);
     emitter.on('nextAct', this.nextAct);
     emitter.on('update:position', this.updateCharacterPosition);
@@ -87,6 +94,16 @@ export default {
     emitter.off('update:position', this.updateCharacterPosition);
   },
   methods: {
+    setLoadingState() {
+      setTimeout(() => {
+        this.isLoading = false;
+        const loadingOverlay = document.getElementsByClassName('loading-overlay')[0];
+        if (loadingOverlay) {
+          loadingOverlay.style.display = 'none';
+        }
+      }, 9000);
+    },
+
     getCurrentAct() {
       return Object.keys(this.actsData)[this.currentActIndex];
     },
@@ -103,6 +120,8 @@ export default {
       this.currentActIndex = (this.currentActIndex + 1) % Object.keys(this.actsData).length;
       this.currentActKey = `act-${Object.keys(this.actsData)[this.currentActIndex]}`;
       this.resetAct();
+      this.isLoading = true;
+      this.setLoadingState();
     },
 
     prevAct() {
@@ -113,6 +132,8 @@ export default {
       }
       this.currentActKey = `act-${Object.keys(this.actsData)[this.currentActIndex]}`;
       this.resetAct();
+      this.isLoading = true;
+      this.setLoadingState();
     },
 
     updateCharacterPosition({ direction, speed }) {
@@ -141,19 +162,6 @@ export default {
   animation: slide 100s linear infinite;
 }
 
-.invisible-top {
-  clip-path: inset(15% 0 0 0);
-}
-
-.background-layer {
-  z-index: 5; /* Behind the character */
-}
-
-.foreground-layer {
-  position: relative;
-  z-index: 15; /* In front of the character */
-}
-
 @keyframes slide {
   0% {
     background-position: 0 0;
@@ -163,13 +171,14 @@ export default {
   }
 }
 
-/* 4 - фиолетовый */
-
 .ribbon {
   position: absolute;
   top: -20px;
-  right: 80px;
+  right: 55%;
   filter: drop-shadow(12px 13px 12px rgba(0, 0, 0, 0.5));
+  opacity: 1;
+  z-index: 9999;
+  animation: fadeOut 12s forwards;
 }
 
 .ribbon span {
@@ -179,9 +188,30 @@ export default {
   font-size: 22px;
   text-align: center;
   background: #680202;
-  width: 140px;
-  line-height: 156px;
+  width: 330%;
+  line-height: 256px;
   clip-path: polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%);
   border: 5px solid rgb(141, 5, 5);
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.95);
+  opacity: 1;
+  z-index: 9998;
+  animation: fadeOut 15s forwards;
+}
+
+@keyframes fadeOut{
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 0;
+  }
 }
 </style>

@@ -18,6 +18,7 @@
     :charPosition="positionX"
     :direction="isFacingLeft"
   />
+  <ControlButtons />
 </template>
 
 <script>
@@ -31,12 +32,14 @@ import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimatio
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 import ImgDecorations from '@/components/Decorations/ImgDecorations/index.vue';
 import ImgCharacter from './ImgCharacter/index.vue';
+import ControlButtons from './ControlButtons/index.vue';
 
 export default {
   name: 'ControlCharacter',
   components: {
     ImgCharacter,
     ImgDecorations,
+    ControlButtons,
   },
   props: ['currentAct'],
   data() {
@@ -128,6 +131,10 @@ export default {
     emitter.on('update-walking-speed', this.updateWalkingSpeed);
     emitter.on('update-running-speed', this.updateRunningSpeed);
     emitter.on('enemy-attack', this.applyDamage);
+    emitter.on('mobile-move', this.handleMobileMove);
+    emitter.on('mobile-stop-move', this.handleMobileStopMove);
+    emitter.on('mobile-attack', this.handleMobileAttack);
+    emitter.on('mobile-stop-attack', this.handleMobileStopAttack);
   },
   beforeUnmount() {
     document.removeEventListener('keydown', this.handleKeyDown);
@@ -136,12 +143,65 @@ export default {
     emitter.off('update-walking-speed', this.updateWalkingSpeed);
     emitter.off('update-running-speed', this.updateRunningSpeed);
     emitter.off('enemy-attack', this.applyDamage);
+    emitter.off('mobile-move', this.handleMobileMove);
+    emitter.off('mobile-stop-move', this.handleMobileStopMove);
+    emitter.off('mobile-attack', this.handleMobileAttack);
+    emitter.off('mobile-stop-attack', this.handleMobileStopAttack);
 
     if (this.scrollInterval) {
       clearInterval(this.scrollInterval);
     }
   },
   methods: {
+    handleMobileMove(direction) {
+      let event;
+
+      if (direction === 'left') {
+        event = new KeyboardEvent('keydown', { code: 'ArrowLeft' });
+      } else if (direction === 'right') {
+        event = new KeyboardEvent('keydown', { code: 'ArrowRight' });
+      }
+
+      if (event) {
+        this.handleKeyDown(event);
+      }
+    },
+
+    handleMobileStopMove(direction) {
+      let event;
+
+      if (direction === 'left') {
+        event = new KeyboardEvent('keyup', { code: 'ArrowLeft' });
+      } else if (direction === 'right') {
+        event = new KeyboardEvent('keyup', { code: 'ArrowRight' });
+      }
+
+      if (event) {
+        this.handleKeyUp(event);
+      }
+    },
+
+    handleMobileAttack(attackType) {
+      let event;
+
+      if (attackType === 'attack') {
+        event = new KeyboardEvent('keydown', { code: 'Space', shiftKey: false });
+      } else if (attackType === 'attack2') {
+        event = new KeyboardEvent('keydown', { code: 'Space', shiftKey: true });
+      } else if (attackType === 'attack3') {
+        event = new KeyboardEvent('keydown', { code: 'Space', ctrlKey: true });
+      }
+
+      if (event) {
+        this.handleKeyDown(event);
+      }
+    },
+
+    handleMobileStopAttack() {
+      const event = new KeyboardEvent('keyup', { code: 'Space' });
+      this.handleKeyUp(event);
+    },
+
     performAttack(attackType) {
       const attack = this.attacks[attackType];
       const direction = this.isFacingLeft ? 'left' : 'right';
@@ -174,6 +234,17 @@ export default {
         const shouldReturnToAttack = this.prevKeyPressed === 'attack';
 
         if (shouldReturnToWalk || shouldReturnToAttack) {
+          this.keyPressed = this.prevKeyPressed;
+        }
+        return;
+      }
+
+      const isCtrlReleased = event.code === 'ControlLeft' || event.code === 'ControlRight';
+
+      if (isCtrlReleased) {
+        const shouldReturnToAttack = this.prevKeyPressed === 'attack';
+
+        if (shouldReturnToAttack) {
           this.keyPressed = this.prevKeyPressed;
         }
         return;
@@ -243,18 +314,31 @@ export default {
       }
 
       if (event.code === 'Space') {
-        this.prevKeyPressed = isShiftPressed && keyPressed === 'idle' ? 'attack' : keyPressed;
-        this.keyPressed = isShiftPressed ? 'attack2' : 'attack';
+        let attackType;
+        if (event.ctrlKey) {
+          attackType = 'attack3';
+          this.keyPressed = attackType;
+        } else if (isShiftPressed && keyPressed === 'idle') {
+          attackType = 'attack2';
+          this.keyPressed = attackType;
+        } else if (isShiftPressed) {
+          attackType = 'attack2';
+          this.keyPressed = attackType;
+        } else {
+          attackType = 'attack';
+          this.keyPressed = attackType;
+        }
+
+        this.prevKeyPressed = this.keyPressed;
 
         if (!this.attackInterval) {
           this.attackInterval = setInterval(() => {
             if (this.scrollInterval) {
               clearInterval(this.scrollInterval);
             }
-            this.performAttack(isShiftPressed ? 'attack2' : 'attack');
+            this.performAttack(attackType);
           }, this.animationLen * 100);
         }
-
         return;
       }
 

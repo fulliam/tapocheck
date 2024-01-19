@@ -17,7 +17,7 @@
              height: 0;"
     />
   </div>
-  <router-view/>
+  <router-view @contextmenu.prevent/>
 </template>
 
 <script>
@@ -28,6 +28,11 @@ export default {
   components: {
     SideMenu,
     MusicPlayer,
+  },
+  mounted() {
+    window.addEventListener('contextmenu', (event) => {
+      event.preventDefault();
+    });
   },
 };
 </script>
@@ -103,6 +108,16 @@ html, body {
       color: #029a44;
       font-size: 64px;
     }
+  }
+
+  &-info {
+    position: absolute;
+    display: flex;
+    left: 20px;
+    top: 180px;
+    color: #fff;
+    font-size: 12px;
+    z-index: 100;
   }
 }
 

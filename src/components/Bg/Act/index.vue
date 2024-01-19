@@ -1,4 +1,6 @@
 <template>
+  <div class="dev-info">{{ pageSize }}</div>
+
   <div class="act-container">
     <slot name="currencies" :scene="styledScene"></slot>
     <slot name="enemy" :scene="styledScene"></slot>
@@ -31,6 +33,7 @@ export default {
   data() {
     return {
       backgroundPositionX: 0,
+      pageSize: `${window.innerWidth}x${window.innerHeight}`,
     };
   },
 
@@ -61,7 +64,7 @@ export default {
       return 0;
     },
     maxScrollPosition() {
-      return -5300;
+      return -window.innerWidth * 3 - 300;
     },
     styledScenes() {
       return this.scenes.map((scene) => scene.map((part) => {
@@ -90,13 +93,22 @@ export default {
       }
     },
 
-    vwToPixels(vw) {
-      return ((document.documentElement.clientWidth * vw) / 100);
+    updatePageSize() {
+      this.pageSize = `${window.innerWidth}x${window.innerHeight}`;
+      this.$forceUpdate();
     },
 
     resetBackgroundPosition() {
       this.backgroundPositionX = 0;
     },
+  },
+
+  mounted() {
+    window.addEventListener('resize', this.updatePageSize);
+  },
+
+  beforeUnmount() { // Используйте beforeDestroy, если вы используете Vue 2
+    window.removeEventListener('resize', this.updatePageSize);
   },
 };
 </script>
@@ -107,19 +119,23 @@ $sceneCount: 4;
 .act-container {
   display: flex;
   width: calc(100vw * #{$sceneCount});
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
-}
 
-@media (max-width: 768px) {
-  .act-container {
+  @media (min-width: 1620px) {
     width: calc(100vw * #{$sceneCount});
   }
-}
 
-@media (max-width: 480px) {
-  .act-container {
-    width: calc(100vw * #{$sceneCount});
+  @media (max-width: 1620px) {
+    width: calc(100vw * #{$sceneCount - 1});
+  }
+
+  @media (min-width: 1320px) {
+    width: calc(100vw * #{$sceneCount - 1});
+  }
+
+  @media (max-width: 1320px) {
+    width: calc(100vw * #{$sceneCount - 2});
   }
 }
 
@@ -137,21 +153,13 @@ $sceneCount: 4;
   margin: 0;
 
   & img {
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
   }
 
   &.firefly-animation {
     animation: fadeInOut 3s ease-in-out infinite;
-  }
-
-  &.background-layer {
-    z-index: 5; /* Behind the character */
-  }
-
-  &.foreground-layer {
-    position: relative;
-    z-index: 15; /* In front of the character */
   }
 }
 
