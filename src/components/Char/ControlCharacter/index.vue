@@ -36,12 +36,15 @@ import ControlButtons from './ControlButtons/index.vue';
 
 export default {
   name: 'ControlCharacter',
+
   components: {
     ImgCharacter,
     ImgDecorations,
     ControlButtons,
   },
+
   props: ['currentAct'],
+
   data() {
     return {
       screenWidth: window.innerWidth,
@@ -75,7 +78,7 @@ export default {
         attack3: { damage: 16 },
       },
       attackInterval: null,
-      attackCooldown: 500, // 1 in 500 ms.
+      attackCooldown: 500,
 
       enemyId: null,
     };
