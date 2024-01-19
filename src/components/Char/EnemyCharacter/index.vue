@@ -2,6 +2,7 @@
   <div class="enemy-health-bar-outer" :style="healthBarPosition">
     <div class="enemy-health-bar-inner" :style="{width: healthPercentage + '%'}">
       {{  parseInt(healthPercentage)  }}%
+      {{ playerPositionX }}
     </div>
   </div>
   <ImgEnemyCharacter
@@ -160,8 +161,8 @@ export default {
       if (['walk', 'run'].includes(this.enemyState)) {
         const proposedX = this.positionX + (this.direction * speed);
 
-        let startX; let
-          endX;
+        let startX;
+        let endX;
         if (this.direction < 0) {
           startX = this.positionX - 50;
           endX = this.positionX;
@@ -198,9 +199,12 @@ export default {
     },
 
     updatePositionIfPlayerMove({ direction, speed, playerPositionX }) {
-      if (direction === 'right') {
+      const leftEdge = 0;
+      const rightEdge = this.screenWidth - 350;
+
+      if (direction === 'right' && playerPositionX < rightEdge) {
         this.positionX -= speed;
-      } else if (direction === 'left') {
+      } else if (direction === 'left' && playerPositionX > leftEdge) {
         this.positionX += speed;
       }
 

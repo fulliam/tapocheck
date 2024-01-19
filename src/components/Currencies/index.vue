@@ -43,9 +43,12 @@ export default {
       this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
     },
     updatePositionIfPlayerMove({ direction, speed, playerPositionX }) {
-      if (direction === 'right') {
+      const leftEdge = 0;
+      const rightEdge = window.innerWidth - 350;
+
+      if (direction === 'right' && playerPositionX < rightEdge) {
         this.currencyPositionX -= speed;
-      } else if (direction === 'left') {
+      } else if (direction === 'left' && playerPositionX > leftEdge) {
         this.currencyPositionX += speed;
       }
 

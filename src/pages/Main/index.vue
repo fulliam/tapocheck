@@ -96,7 +96,6 @@ export default {
   left: 0;
   top: 0;
   z-index: 10;
-  box-shadow: inset 0 0 100px black;
 }
 
 .act-params {

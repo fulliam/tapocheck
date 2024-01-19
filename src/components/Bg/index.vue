@@ -174,7 +174,7 @@ export default {
 .ribbon {
   position: absolute;
   top: -20px;
-  right: 55%;
+  right: 52%;
   filter: drop-shadow(12px 13px 12px rgba(0, 0, 0, 0.5));
   opacity: 1;
   z-index: 9999;

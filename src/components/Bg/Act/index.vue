@@ -10,7 +10,6 @@
       v-for="(styledScene, index) in styledScenes"
       :key="`scene-container-${index}`"
       class="act-scene-container"
-      :style="{ width: '100vw', transform: `translateX(${index * (sceneGap)}vw)` }"
     >
       <slot :index="index">
         <div
@@ -60,11 +59,8 @@ export default {
   },
 
   computed: {
-    sceneGap() {
-      return 0;
-    },
     maxScrollPosition() {
-      return -window.innerWidth * 3 - 300;
+      return -window.innerWidth * 3;
     },
     styledScenes() {
       return this.scenes.map((scene) => scene.map((part) => {
@@ -121,22 +117,6 @@ $sceneCount: 4;
   width: calc(100vw * #{$sceneCount});
   height: 100vh;
   overflow: hidden;
-
-  @media (min-width: 1620px) {
-    width: calc(100vw * #{$sceneCount});
-  }
-
-  @media (max-width: 1620px) {
-    width: calc(100vw * #{$sceneCount - 1});
-  }
-
-  @media (min-width: 1320px) {
-    width: calc(100vw * #{$sceneCount - 1});
-  }
-
-  @media (max-width: 1320px) {
-    width: calc(100vw * #{$sceneCount - 2});
-  }
 }
 
 .act-scene-container {
