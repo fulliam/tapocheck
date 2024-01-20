@@ -29,6 +29,7 @@
             :initialMaxHealth="enemy.initialMaxHealth"
             :initialAttack="enemy.initialAttack"
             :attackRange="enemy.attackRange"
+            :currencyDrop="enemy.currencyDrop"
           />
         </template>
 
@@ -38,7 +39,7 @@
           />
         </template>
       </ActComponent>
-
+      <!--
       <div
         class="loading-overlay"
         v-if="isLoading"
@@ -49,6 +50,7 @@
           </span>
         </div>
       </div>
+      -->
     </div>
 </template>
 
@@ -92,6 +94,7 @@ export default {
     emitter.on('nextAct', this.nextAct);
     emitter.on('update:position', this.updateCharacterPosition);
     emitter.on('device-info', this.handleDeviceInfo);
+    emitter.on('spawn-money', this.spawnCurrencyAfterEnemyDead);
   },
 
   beforeUnmount() {
@@ -99,9 +102,27 @@ export default {
     emitter.off('nextAct', this.nextAct);
     emitter.off('update:position', this.updateCharacterPosition);
     emitter.off('device-info', this.handleDeviceInfo);
+    emitter.off('spawn-money', this.spawnCurrencyAfterEnemyDead);
   },
 
   methods: {
+    spawnCurrencyAfterEnemyDead({ positionX, money }) {
+      money.forEach((drop) => {
+        const amount = Math.floor(Math.random() * drop.amount) + 1;
+
+        for (let i = 0; i < amount; i += 1) {
+          const initialPositionX = this.deviceInfo.device !== 'Десктопный компьютер' ? positionX - 80 : positionX;
+          const newCurrency = {
+            currencyId: drop.currencyId,
+            images: this.CurrenciesAnimations[drop.type][drop.currencyId],
+            initialPositionX,
+            value: 1,
+          };
+          this.currencies[this.getCurrentAct()].push(newCurrency);
+        }
+      });
+    },
+
     setLoadingState() {
       setTimeout(() => {
         this.isLoading = false;

@@ -69,6 +69,7 @@ export default {
           this.health = 0;
 
           emitter.emit('enemy-dead', this.enemyId);
+          emitter.emit('spawn-money', { positionX: this.positionX, money: this.money });
         }
       }
     },

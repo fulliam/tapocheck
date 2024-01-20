@@ -2,7 +2,6 @@
   <div class="enemy-health-bar-outer" :style="healthBarPosition">
     <div class="enemy-health-bar-inner" :style="{width: healthPercentage + '%'}">
       {{  parseInt(healthPercentage)  }}%
-      {{ playerPositionX }}
     </div>
   </div>
   <ImgEnemyCharacter
@@ -21,11 +20,13 @@
 import { ArcherAnimations } from '@/assets/char/ally/archer/ArcherAnimations';
 import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnimations';
 import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
+
 import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations';
 import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
 import { WarmorAnimations } from '@/assets/char/enemy/warmor/WarmorAnimations';
 import { DemonAnimations } from '@/assets/char/boss/demon2/DemonAnimations';
 import { DragonAnimations } from '@/assets/char/boss/dragon/DragonAnimations';
+
 import ImgEnemyCharacter from './ImgEnemyCharacter/index.vue';
 import behavior from './behavior';
 
@@ -71,6 +72,9 @@ export default {
       type: Number,
       default: 230,
     },
+    currencyDrop: {
+      type: Array,
+    },
   },
 
   data() {
@@ -91,6 +95,8 @@ export default {
       attackCooldown: 0,
       attackCooldownDuration: 400,
       lastAttack: 'attack2',
+
+      money: this.currencyDrop,
     };
   },
 
