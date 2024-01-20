@@ -1,6 +1,6 @@
 <template>
   <img
-    v-show="!collection"
+    v-if="!collection"
     :src="currentImage"
     alt=" "
     :style="[currencyPosition, filterStyle]"
@@ -119,6 +119,6 @@ export default {
   position: absolute;
   z-index: 10;
   will-change: transform;
-  height: 8%;
+  height: 3%;
 }
 </style>

@@ -16,6 +16,7 @@
              width: 0;
              height: 0;"
     />
+    <DeviceInfo />
   </div>
   <router-view @contextmenu.prevent/>
 </template>
@@ -23,11 +24,13 @@
 <script>
 import SideMenu from './components/SideMenu/index.vue';
 import MusicPlayer from './components/MusicPlayer/index.vue';
+import DeviceInfo from './components/DeviceInfo/index.vue';
 
 export default {
   components: {
     SideMenu,
     MusicPlayer,
+    DeviceInfo,
   },
   mounted() {
     window.addEventListener('contextmenu', (event) => {

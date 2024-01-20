@@ -65,6 +65,7 @@ import ImgCurrencies from '../Currencies/index.vue';
 
 export default {
   name: 'ActView',
+
   data() {
     return {
       CurrenciesAnimations,
@@ -74,25 +75,32 @@ export default {
       enemies,
       currencies,
       isLoading: true,
+      deviceInfo: {},
     };
   },
+
   components: {
     ActComponent,
     ControlCharacter,
     EnemyCharacter,
     ImgCurrencies,
   },
+
   mounted() {
     this.setLoadingState();
     emitter.on('prevAct', this.prevAct);
     emitter.on('nextAct', this.nextAct);
     emitter.on('update:position', this.updateCharacterPosition);
+    emitter.on('device-info', this.handleDeviceInfo);
   },
+
   beforeUnmount() {
     emitter.off('prevAct', this.prevAct);
     emitter.off('nextAct', this.nextAct);
     emitter.off('update:position', this.updateCharacterPosition);
+    emitter.off('device-info', this.handleDeviceInfo);
   },
+
   methods: {
     setLoadingState() {
       setTimeout(() => {
@@ -109,7 +117,14 @@ export default {
     },
 
     getEnemiesForCurrentAct() {
-      return this.enemies[this.getCurrentAct()] || [];
+      let enemiesForCurrentAct = this.enemies[this.getCurrentAct()];
+      if (this.deviceInfo.device !== 'Десктопный компьютер') {
+        enemiesForCurrentAct = enemiesForCurrentAct.map((enemy) => ({
+          ...enemy,
+          attackRange: enemy.attackRange / 2,
+        }));
+      }
+      return enemiesForCurrentAct;
     },
 
     getCurrenciesForCurrentAct() {
@@ -139,8 +154,20 @@ export default {
     updateCharacterPosition({ direction, speed }) {
       this.$refs.act.moveBackground(direction, speed);
     },
+
     resetAct() {
       this.$refs.act.resetBackgroundPosition();
+    },
+
+    handleDeviceInfo({
+      browser, device, os, referrer,
+    }) {
+      this.deviceInfo = {
+        browser,
+        device,
+        os,
+        referrer,
+      };
     },
   },
 };

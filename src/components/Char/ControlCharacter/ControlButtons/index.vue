@@ -1,11 +1,11 @@
 <template>
-  <div class="control-buttons">
+  <div class="control-buttons" v-if="deviceInfo.device !== 'Десктопный компьютер'">
     <!--
     <div class="user-info">
-      <p>{{ this.browser }}</p>
-      <p>{{ device }}</p>
-      <p>{{ operatingSystem }}</p>
-      <p>{{ referrer }}</p>
+      <p>{{ deviceInfo.browser }}</p>
+      <p>{{ deviceInfo.device }}</p>
+      <p>{{ deviceInfo.os }}</p>
+      <p>{{ deviceInfo.referrer }}</p>
     </div>
     -->
     <button
@@ -61,10 +61,7 @@ export default {
 
   data() {
     return {
-      browser: '',
-      device: '',
-      operatingSystem: '',
-      referrer: '',
+      deviceInfo: {},
     };
   },
 
@@ -93,57 +90,24 @@ export default {
       emitter.emit('mobile-stop-attack', attackType);
     },
 
-    getBrowserInfo() {
-      const userAgent = navigator.userAgent.toLowerCase();
-
-      if (userAgent.includes('edge')) {
-        this.browser = 'Microsoft Edge';
-      } else if (userAgent.includes('opr')) {
-        this.browser = 'Opera';
-      } else if (userAgent.includes('chrome')) {
-        this.browser = 'Google Chrome';
-      } else if (userAgent.includes('safari')) {
-        this.browser = 'Safari';
-      } else if (userAgent.includes('firefox')) {
-        this.browser = 'Mozilla Firefox';
-      } else {
-        this.browser = 'Неизвестный браузер';
-      }
-    },
-
-    getDeviceInfo() {
-      const userAgent = navigator.userAgent.toLowerCase();
-      const isMobile = /(iPhone|iPod|iPad|Android|BlackBerry|Mobile)/i.test(userAgent);
-      const isTablet = /(iPad|Android)/i.test(userAgent);
-
-      if (isMobile) {
-        this.device = 'Мобильное устройство';
-      } else if (isTablet) {
-        this.device = 'Планшет';
-      } else {
-        this.device = 'Десктопный компьютер';
-      }
-
-      if (userAgent.includes('win')) {
-        this.operatingSystem = 'Windows';
-      } else if (userAgent.includes('mac')) {
-        this.operatingSystem = 'Mac OS';
-      } else if (userAgent.includes('linux')) {
-        this.operatingSystem = 'Linux';
-      } else if (userAgent.includes('android')) {
-        this.operatingSystem = 'Android';
-      } else if (userAgent.includes('ios')) {
-        this.operatingSystem = 'iOS';
-      } else {
-        this.operatingSystem = 'Неизвестная операционная система';
-      }
+    handleDeviceInfo({
+      browser, device, os, referrer,
+    }) {
+      this.deviceInfo = {
+        browser,
+        device,
+        os,
+        referrer,
+      };
     },
   },
 
   mounted() {
-    this.getBrowserInfo();
-    this.getDeviceInfo();
-    this.referrer = document.referrer;
+    emitter.on('device-info', this.handleDeviceInfo);
+  },
+
+  beforeUnmount() {
+    emitter.off('device-info', this.handleDeviceInfo);
   },
 };
 </script>
