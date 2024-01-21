@@ -28,6 +28,17 @@ export default {
       initialMaxHealth: 30,
       initialAttack: 3,
       attackRange: 210,
+      currencyDrop: [
+        {
+          currencyId: 'silver', type: 'coin', amount: 5, chance: 0.5,
+        },
+        {
+          currencyId: 'gold', type: 'coin', amount: 3, chance: 0.3,
+        },
+        {
+          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.1,
+        },
+      ],
     },
     {
       enemyId: 'war2',
@@ -37,6 +48,17 @@ export default {
       initialMaxHealth: 30,
       initialAttack: 3,
       attackRange: 210,
+      currencyDrop: [
+        {
+          currencyId: 'silver', type: 'coin', amount: 5, chance: 0.5,
+        },
+        {
+          currencyId: 'gold', type: 'coin', amount: 3, chance: 0.3,
+        },
+        {
+          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.1,
+        },
+      ],
     },
   ],
   ActII: [

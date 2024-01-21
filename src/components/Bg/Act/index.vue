@@ -2,8 +2,8 @@
   <div class="dev-info">{{ pageSize }}</div>
 
   <div class="act-container">
-    <slot name="currencies" :scene="styledScene"></slot>
     <slot name="enemy" :scene="styledScene"></slot>
+    <slot name="currencies" :scene="styledScene"></slot>
     <slot name="character" :scene="styledScene"></slot>
 
     <div

@@ -10,11 +10,11 @@
           <ImgCurrencies
             v-for="(currency, index) in getCurrenciesForCurrentAct()"
             :key="`currency-${index}`"
-            :currencyId="`${currency.currencyId}-${index}`"
+            :currencyId="currency.currencyId"
             :positionX="currency.initialPositionX"
             :images="currency.images"
             :currentAct="getCurrentAct()"
-            :value="currency.value"
+            :type="currency.type"
           />
         </template>
 
@@ -76,6 +76,8 @@ export default {
       actsData,
       enemies,
       currencies,
+      currencyIdKey: 0,
+
       isLoading: true,
       deviceInfo: {},
     };
@@ -89,12 +91,15 @@ export default {
   },
 
   mounted() {
+    setInterval(console.log(currencies), 1000);
     this.setLoadingState();
     emitter.on('prevAct', this.prevAct);
     emitter.on('nextAct', this.nextAct);
     emitter.on('update:position', this.updateCharacterPosition);
     emitter.on('device-info', this.handleDeviceInfo);
     emitter.on('spawn-money', this.spawnCurrencyAfterEnemyDead);
+    emitter.on('coin-collected', this.removeCollectedCurrency);
+    emitter.on('gem-collected', this.removeCollectedCurrency);
   },
 
   beforeUnmount() {
@@ -103,6 +108,8 @@ export default {
     emitter.off('update:position', this.updateCharacterPosition);
     emitter.off('device-info', this.handleDeviceInfo);
     emitter.off('spawn-money', this.spawnCurrencyAfterEnemyDead);
+    emitter.off('coin-collected', this.removeCollectedCurrency);
+    emitter.off('gem-collected', this.removeCollectedCurrency);
   },
 
   methods: {
@@ -111,16 +118,24 @@ export default {
         const amount = Math.floor(Math.random() * drop.amount) + 1;
 
         for (let i = 0; i < amount; i += 1) {
-          const initialPositionX = this.deviceInfo.device !== 'Десктопный компьютер' ? positionX - 80 : positionX;
+          const offset = Math.random() * 100 - 50;
+          const initialPositionX = (this.deviceInfo.device !== 'Десктопный компьютер' ? positionX - 80 : positionX) + offset;
           const newCurrency = {
-            currencyId: drop.currencyId,
+            currencyId: `${drop.currencyId}-${this.currencyIdCounter}`,
             images: this.CurrenciesAnimations[drop.type][drop.currencyId],
             initialPositionX,
-            value: 1,
+            type: drop.type,
           };
           this.currencies[this.getCurrentAct()].push(newCurrency);
+          this.currencyIdCounter += 1;
         }
       });
+    },
+
+    removeCollectedCurrency({ currencyId }) {
+      this.currencies[this.getCurrentAct()] = this.currencies[this.getCurrentAct()].filter(
+        (currency) => currency.currencyId !== currencyId,
+      );
     },
 
     setLoadingState() {

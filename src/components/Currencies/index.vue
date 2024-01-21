@@ -16,7 +16,7 @@ import { gsap } from 'gsap';
 export default {
   name: 'ImgCurrencies',
 
-  props: ['images', 'currentAct', 'positionX', 'currencyId'],
+  props: ['images', 'currentAct', 'positionX', 'currencyId', 'type'],
 
   data() {
     return {
@@ -43,12 +43,9 @@ export default {
 
   methods: {
     createDropAnimation() {
-      const randomX = Math.random() * 100 - 10;
       const randomY = Math.random() * -90;
-      this.currencyPositionX -= randomX;
       gsap.to(this.$refs.currencyImg, {
         duration: 0.65,
-        x: randomX,
         y: randomY,
         ease: 'power1.out',
         onComplete: () => {
@@ -87,17 +84,23 @@ export default {
       this.playerPositionX = playerPositionX;
     },
 
-    handleCollection(currencyId) {
+    handleCollection(currencyId, type) {
       if (this.currencyId === currencyId) {
         this.stopAnimation();
         this.collection = true;
+
+        if (type.includes('coin')) {
+          emitter.emit('coin-collected', { currencyId });
+        } else if (type.includes('gem')) {
+          emitter.emit('gem-collected', { currencyId });
+        }
       }
     },
 
     checkCollection() {
       const distance = this.playerPositionX - this.currencyPositionX;
       if (distance >= -20 && distance <= 20) {
-        this.handleCollection(this.currencyId);
+        this.handleCollection(this.currencyId, this.type);
       }
     },
   },
@@ -121,12 +124,12 @@ export default {
       if (this.currentAct === 'ActVI') {
         return {
           left: `calc(${this.currencyPositionX}px + ${this.dropRange}px)`,
-          bottom: `calc(15% - ${this.currencyPositionY}px)`,
+          bottom: `calc(11% - ${this.currencyPositionY}px)`,
         };
       }
       return {
         left: `calc(${this.currencyPositionX}px + ${this.dropRange}px)`,
-        bottom: `calc(30% - ${this.currencyPositionY}px)`,
+        bottom: `calc(25% - ${this.currencyPositionY}px)`,
       };
     },
 
