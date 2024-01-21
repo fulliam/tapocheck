@@ -27,7 +27,7 @@
             :initialPositionX="enemy.initialPositionX"
             :initialHealth="enemy.initialHealth"
             :initialMaxHealth="enemy.initialMaxHealth"
-            :initialAttack="enemy.initialAttack"
+            :initialAttacks="enemy.initialAttacks"
             :attackRange="enemy.attackRange"
             :currencyDrop="enemy.currencyDrop"
           />

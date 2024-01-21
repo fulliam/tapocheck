@@ -6,7 +6,10 @@ export default {
       initialPositionX: 1100,
       initialHealth: 30,
       initialMaxHealth: 30,
-      initialAttack: 3,
+      initialAttacks: {
+        attack: { damage: 8 },
+        attack2: { damage: 10 },
+      },
       attackRange: 210,
       currencyDrop: [
         {
@@ -26,7 +29,10 @@ export default {
       initialPositionX: 1900,
       initialHealth: 30,
       initialMaxHealth: 30,
-      initialAttack: 3,
+      initialAttacks: {
+        attack: { damage: 8 },
+        attack2: { damage: 10 },
+      },
       attackRange: 210,
       currencyDrop: [
         {
@@ -46,7 +52,10 @@ export default {
       initialPositionX: 2600,
       initialHealth: 30,
       initialMaxHealth: 30,
-      initialAttack: 3,
+      initialAttacks: {
+        attack: { damage: 8 },
+        attack2: { damage: 10 },
+      },
       attackRange: 210,
       currencyDrop: [
         {
@@ -62,7 +71,86 @@ export default {
     },
   ],
   ActII: [
-    // Описание врагов для Act II
+
   ],
-  // Дополнительные акты и их враги...
+  ActIII: [
+
+  ],
+  ActIV: [
+
+  ],
+  ActV: [
+    {
+      enemyId: 'pal',
+      initialCharacter: 'Paladin',
+      initialPositionX: 1100,
+      initialHealth: 3000,
+      initialMaxHealth: 3000,
+      initialAttacks: {
+        attack: { damage: 20 },
+        attack2: { damage: 30 },
+      },
+      attackRange: 210,
+      currencyDrop: [
+        {
+          currencyId: 'red', type: 'coin', amount: 10, chance: 0.5,
+        },
+        {
+          currencyId: 'red', type: 'coin', amount: 3, chance: 0.3,
+        },
+        {
+          currencyId: 'grey', type: 'gem', amount: 3, chance: 0.1,
+        },
+      ],
+    },
+    {
+      enemyId: 'pal1',
+      initialCharacter: 'Paladin',
+      initialPositionX: 1160,
+      initialHealth: 3000,
+      initialMaxHealth: 3000,
+      initialAttacks: {
+        attack: { damage: 20 },
+        attack2: { damage: 30 },
+      },
+      attackRange: 210,
+      currencyDrop: [
+        {
+          currencyId: 'red', type: 'coin', amount: 8, chance: 0.5,
+        },
+        {
+          currencyId: 'gold', type: 'coin', amount: 6, chance: 0.3,
+        },
+        {
+          currencyId: 'red', type: 'gem', amount: 3, chance: 0.1,
+        },
+      ],
+    },
+    {
+      enemyId: 'pal2',
+      initialCharacter: 'Paladin',
+      initialPositionX: 2600,
+      initialHealth: 3000,
+      initialMaxHealth: 3000,
+      initialAttacks: {
+        attack: { damage: 20 },
+        attack2: { damage: 30 },
+      },
+      attackRange: 210,
+      currencyDrop: [
+        {
+          currencyId: 'red', type: 'coin', amount: 5, chance: 0.5,
+        },
+        {
+          currencyId: 'gold', type: 'coin', amount: 13, chance: 0.3,
+        },
+        {
+          currencyId: 'red', type: 'gem', amount: 2, chance: 0.1,
+        },
+      ],
+    },
+  ],
+  ActVI: [
+
+  ],
 };

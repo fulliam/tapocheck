@@ -114,7 +114,7 @@ export default {
       this.enemyState = 'attack';
       setTimeout(() => {
         if (this.enemyState === 'attack') {
-          emitter.emit('enemy-attack', { damage: 2, enemyId: this.enemyId });
+          emitter.emit('enemy-attack', { damage: this.attacks.attack.damage, enemyId: this.enemyId });
         }
       }, 100);
     },
@@ -123,7 +123,7 @@ export default {
       this.enemyState = 'attack2';
       setTimeout(() => {
         if (this.enemyState === 'attack2') {
-          emitter.emit('enemy-attack', { damage: 2, enemyId: this.enemyId });
+          emitter.emit('enemy-attack', { damage: this.attacks.attack2.damage, enemyId: this.enemyId });
         }
       }, 100);
     },

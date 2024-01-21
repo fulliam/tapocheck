@@ -60,9 +60,8 @@ export default {
       type: Number,
       default: 100,
     },
-    initialAttack: {
-      type: Number,
-      default: 1,
+    initialAttacks: {
+      type: Array,
     },
     currentAct: {
       type: String,
@@ -92,6 +91,7 @@ export default {
       playerPositionX: 0,
       screenWidth: window.innerWidth,
 
+      attacks: this.initialAttacks,
       attackCooldown: 0,
       attackCooldownDuration: 400,
       lastAttack: 'attack2',
