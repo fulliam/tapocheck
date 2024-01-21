@@ -1,14 +1,11 @@
 <template>
   <div class="control-buttons">
-    <!--
     <div class="user-info">
       <p>{{ deviceInfo.browser }}</p>
       <p>{{ deviceInfo.device }}</p>
       <p>{{ deviceInfo.os }}</p>
       <p>{{ deviceInfo.referrer }}</p>
     </div>
-    -->
-    {{ currentCharacter }}
     <button
       class="mobile-control left"
       @touchstart="moveLeft"

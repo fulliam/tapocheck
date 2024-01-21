@@ -107,6 +107,7 @@ export default {
         this.attackCooldown = now + this.attackCooldownDuration;
       } else if (Math.abs(distanceToPlayer) <= 900) {
         this.changeState('run');
+        emitter.emit('enemy-position', { enemyId: this.enemyId, enemyPositionX: this.positionX });
       } else if (Math.abs(distanceToPlayer) <= 1600) {
         this.changeState('walk');
       } else {
@@ -118,7 +119,7 @@ export default {
       this.enemyState = 'attack';
       setTimeout(() => {
         if (this.enemyState === 'attack') {
-          emitter.emit('enemy-attack', { damage: this.attacks.attack.damage, enemyId: this.enemyId });
+          emitter.emit('enemy-attack', { damage: this.attacks.attack.damage, enemyId: this.enemyId, enemyPositionX: this.positionX });
         }
       }, this.animationLen * this.enemyAnimationSpeed);
     },
@@ -127,7 +128,7 @@ export default {
       this.enemyState = 'attack2';
       setTimeout(() => {
         if (this.enemyState === 'attack2') {
-          emitter.emit('enemy-attack', { damage: this.attacks.attack2.damage, enemyId: this.enemyId });
+          emitter.emit('enemy-attack', { damage: this.attacks.attack2.damage, enemyId: this.enemyId, enemyPositionX: this.positionX });
         }
       }, this.animationLen * this.enemyAnimationSpeed);
     },

@@ -62,6 +62,11 @@ export default {
             if (this.scrollInterval) {
               clearInterval(this.scrollInterval);
             }
+
+            if (this.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
+              this.shootArrow(attackType);
+            }
+
             this.performAttack(attackType);
           }, this.animationLen * 100);
         }
@@ -212,6 +217,10 @@ export default {
       const attack = this.attacks[attackType];
       const direction = this.isFacingLeft ? 'left' : 'right';
 
+      if (this.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
+        this.shootArrow(attackType);
+      }
+
       emitter.emit('character-attack', {
         damage: attack.damage,
         enemyId: this.enemyId,
@@ -219,7 +228,66 @@ export default {
       });
     },
 
-    applyDamage({ damage, enemyId }) {
+    shootArrow(attackType) {
+      if (this.currentCharacter.name === 'archer') {
+        const newArrow = {
+          isActive: true,
+          hasHit: false,
+          positionX: this.isFacingLeft ? this.positionX - 10 : this.positionX + 10,
+          speed: 15,
+          flightTime: 1000,
+          direction: this.isFacingLeft ? 'left' : 'right',
+        };
+
+        this.arrows.push(newArrow);
+
+        if (!this.arrowUpdateInterval) {
+          this.arrowUpdateInterval = setInterval(() => {
+            this.arrows = this.arrows.filter((arrow) => {
+              if (arrow.isActive) {
+                this.updateArrow(arrow, attackType);
+              }
+              return arrow.isActive;
+            });
+            if (this.arrows.length === 0) {
+              clearInterval(this.arrowUpdateInterval);
+              this.arrowUpdateInterval = null;
+            }
+          }, 20);
+        }
+      }
+    },
+
+    /* eslint-disable no-param-reassign */
+    updateArrow(arrowParam, attackType) {
+      const directionMultiplier = arrowParam.direction === 'left' ? -1 : 1;
+      arrowParam.flightTime -= 20;
+
+      if (
+        this.arrowHitsEnemy(arrowParam)
+          || arrowParam.flightTime <= 0
+      ) {
+        arrowParam.isActive = false;
+        this.arrows = this.arrows.filter((arrowItem) => arrowItem.isActive);
+        if (this.arrowHitsEnemy(arrowParam) && !arrowParam.hasHit) {
+          this.performAttack(attackType);
+          arrowParam.hasHit = true; // устанавливаем флаг, что урон был нанесен
+        }
+      } else {
+        arrowParam.positionX += arrowParam.speed * directionMultiplier;
+      }
+    },
+    /* eslint-enable no-param-reassign */
+
+    arrowHitsEnemy(arrow) {
+      if (Math.abs(arrow.positionX - this.enemyPositionX) <= 30) {
+        return true;
+      }
+      return false;
+    },
+
+    applyDamage({ damage, enemyId, enemyPositionX }) {
+      this.enemyPositionX = enemyPositionX;
       this.enemyId = enemyId;
       this.health -= damage;
       if (this.health <= 0) {
@@ -254,6 +322,11 @@ export default {
     updateRunningSpeed(runningSpeed) {
       this.runningSpeed = runningSpeed;
     },
+
+    handleEnemyPosition({ enemyId, enemyPositionX }) {
+      this.enemyId = enemyId;
+      this.enemyPositionX = enemyPositionX;
+    },
   },
   mounted() {
     document.addEventListener('keydown', this.handleKeyDown);
@@ -261,6 +334,7 @@ export default {
     emitter.on('switch-character', this.switchCharacter);
     emitter.on('update-walking-speed', this.updateWalkingSpeed);
     emitter.on('update-running-speed', this.updateRunningSpeed);
+    emitter.on('enemy-position', this.handleEnemyPosition);
     emitter.on('enemy-attack', this.applyDamage);
     emitter.on('mobile-move', this.handleMobileMove);
     emitter.on('mobile-stop-move', this.handleMobileStopMove);
@@ -273,6 +347,7 @@ export default {
     emitter.off('switch-character', this.switchCharacter);
     emitter.off('update-walking-speed', this.updateWalkingSpeed);
     emitter.off('update-running-speed', this.updateRunningSpeed);
+    emitter.off('enemy-position', this.handleEnemyPosition);
     emitter.off('enemy-attack', this.applyDamage);
     emitter.off('mobile-move', this.handleMobileMove);
     emitter.off('mobile-stop-move', this.handleMobileStopMove);

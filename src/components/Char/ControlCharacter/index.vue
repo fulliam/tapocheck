@@ -4,6 +4,9 @@
       <span>{{ health }}/{{ maxHealth }}</span>
     </div>
   </div>
+  <p class="char-name">
+    {{ currentCharacter.name }}
+  </p>
 
   <div class="coin-display">
     <div class="coin-item" v-for="(value, key) in money.coins" :key="key">
@@ -27,7 +30,21 @@
     :state="keyPressed"
   />
 
-  <!-- ImgDecorations is run animation -->
+  <!-- archer arrow -->
+  <img
+    src="@/assets/char/ally/archer/arrow/arrow.png"
+    v-for="arrow in arrows"
+    :key="arrow"
+    :style="{ position: 'absolute',
+              left: (arrow.direction === 'left'
+                ? arrow.positionX + 0 : arrow.positionX + 350) + 'px',              zIndex: '1001',
+              bottom: (currentAct === 'ActVI' ? '15%' : '31%'),
+              height: '17%',
+            }"
+    alt=" "
+  />
+
+  <!-- run animation -->
   <ImgDecorations
     :isActive="keyPressed === 'run'? true : false"
     :images="DecorationAnimations.effect.runSmoke"
@@ -75,8 +92,8 @@ export default {
       scrollInterval: null,
       DecorationAnimations,
       currentCharacter: {
-        name: 'wizard',
-        animations: WizardAnimations,
+        name: 'archer',
+        animations: ArcherAnimations,
       },
       characters: [
         { name: 'archer', animations: ArcherAnimations },
@@ -104,6 +121,10 @@ export default {
       attackInterval: null,
       attackCooldown: 500,
 
+      arrows: [],
+      arrowUpdateInterval: null,
+
+      enemyPositionX: 1000,
       enemyId: null,
       money: {
         coins: {
