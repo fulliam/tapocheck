@@ -8,7 +8,7 @@ export default {
       const isShiftPressed = event.shiftKey;
       const { keyPressed } = this;
 
-      let speed = this.walkingSpeed;
+      let speed = this.player.walkingSpeed;
 
       let direction = null;
 
@@ -24,11 +24,11 @@ export default {
 
       if (direction) {
         this.keyPressed = isShiftPressed ? 'run' : 'walk';
-        speed = isShiftPressed ? this.runningSpeed : this.walkingSpeed;
+        speed = isShiftPressed ? this.player.runningSpeed : this.player.walkingSpeed;
 
         if (!this.scrollInterval) {
           this.scrollInterval = setInterval(() => {
-            speed = this.keyPressed === 'run' ? this.runningSpeed : this.walkingSpeed;
+            speed = this.keyPressed === 'run' ? this.player.runningSpeed : this.player.walkingSpeed;
             const proposedX = this.positionX + (((this.isFacingLeft ? -1 : 1) * speed) / 4);
             if (proposedX >= 0 && proposedX <= this.screenWidth - 100) {
               this.positionX = proposedX;
@@ -63,7 +63,7 @@ export default {
               clearInterval(this.scrollInterval);
             }
 
-            if (this.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
+            if (this.player.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
               this.shootArrow(attackType);
             }
 
@@ -214,10 +214,10 @@ export default {
     },
 
     performAttack(attackType) {
-      const attack = this.attacks[attackType];
+      const attack = this.player.attacks[attackType];
       const direction = this.isFacingLeft ? 'left' : 'right';
 
-      if (this.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
+      if (this.player.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
         this.shootArrow(attackType);
       }
 
@@ -229,7 +229,7 @@ export default {
     },
 
     shootArrow(attackType) {
-      if (this.currentCharacter.name === 'archer') {
+      if (this.player.currentCharacter.name === 'archer') {
         const newArrow = {
           isActive: true,
           hasHit: false,
@@ -271,7 +271,7 @@ export default {
         this.arrows = this.arrows.filter((arrowItem) => arrowItem.isActive);
         if (this.arrowHitsEnemy(arrowParam) && !arrowParam.hasHit) {
           this.performAttack(attackType);
-          arrowParam.hasHit = true; // устанавливаем флаг, что урон был нанесен
+          arrowParam.hasHit = true;
         }
       } else {
         arrowParam.positionX += arrowParam.speed * directionMultiplier;
@@ -289,10 +289,10 @@ export default {
     applyDamage({ damage, enemyId, enemyPositionX }) {
       this.enemyPositionX = enemyPositionX;
       this.enemyId = enemyId;
-      this.health -= damage;
-      if (this.health <= 0) {
+      this.player.health -= damage;
+      if (this.player.health <= 0) {
         this.keyPressed = 'dead';
-        this.health = 0;
+        this.player.health = 0;
 
         emitter.emit('character-dead' /* who is dead? */);
       }
@@ -316,11 +316,11 @@ export default {
     },
 
     updateWalkingSpeed(walkingSpeed) {
-      this.walkingSpeed = walkingSpeed;
+      this.player.walkingSpeed = walkingSpeed;
     },
 
     updateRunningSpeed(runningSpeed) {
-      this.runningSpeed = runningSpeed;
+      this.player.runningSpeed = runningSpeed;
     },
 
     handleEnemyPosition({ enemyId, enemyPositionX }) {

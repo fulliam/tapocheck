@@ -4,6 +4,7 @@ export default {
   data() { return { CurrenciesAnimations }; },
   ActI: [
     /*
+    FOR MONEY ON SCENE DISPLAY
     {
       currencyId: 'silver',
       images: CurrenciesAnimations.coin.silver,

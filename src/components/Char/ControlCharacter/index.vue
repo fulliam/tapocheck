@@ -1,29 +1,29 @@
 <template>
   <div class="health-bar-outer">
     <div class="health-bar-inner" :style="{width: healthPercentage + '%'}">
-      <span>{{ health }}/{{ maxHealth }}</span>
+      <span>{{ player.health }}/{{ player.maxHealth }}</span>
     </div>
   </div>
   <p class="char-name">
-    {{ currentCharacter.name }}
+    {{ player.currentCharacter.name }}
   </p>
 
   <div class="coin-display">
-    <div class="coin-item" v-for="(value, key) in money.coins" :key="key">
+    <div class="coin-item" v-for="(value, key) in player.money.coins" :key="key">
       <img :src="getCoinImage(key)" alt=" " />
       <span>{{ value }}</span>
     </div>
   </div>
 
   <div class="gem-display">
-    <div class="gem-item" v-for="(value, key) in money.gems" :key="key">
+    <div class="gem-item" v-for="(value, key) in player.money.gems" :key="key">
       <img :src="getGemImage(key)" alt=" " />
       <span>{{ value }}</span>
     </div>
   </div>
 
   <ImgCharacter
-    :key="currentCharacter.name"
+    :key="player.currentCharacter.name"
     :images="selectedImages"
     :direction="charDirection"
     :styleChar="styleCharInAct"
@@ -53,7 +53,11 @@
     :direction="isFacingLeft"
   />
 
-  <ControlButtons :currentCharacter="currentCharacter.name" />
+  <ControlButtons :currentCharacter="player.currentCharacter.name" />
+
+  <CharInventory
+    :player="player"
+  />
 </template>
 
 <script>
@@ -71,6 +75,7 @@ import ImgCharacter from './ImgCharacter/index.vue';
 
 import Control from './control';
 import ControlButtons from './ControlButtons/index.vue';
+import CharInventory from './CharInventory/index.vue';
 
 export default {
   name: 'ControlCharacter',
@@ -81,6 +86,7 @@ export default {
     ImgCharacter,
     ImgDecorations,
     ControlButtons,
+    CharInventory,
   },
 
   props: ['currentAct'],
@@ -89,35 +95,24 @@ export default {
     return {
       screenWidth: window.innerWidth,
 
-      scrollInterval: null,
       DecorationAnimations,
-      currentCharacter: {
-        name: 'archer',
-        animations: ArcherAnimations,
-      },
+
       characters: [
         { name: 'archer', animations: ArcherAnimations },
         { name: 'wizard', animations: WizardAnimations },
         { name: 'swordsman', animations: SwordsmanAnimations },
         { name: 'skeleton', animations: SkeletonAnimations },
       ],
+
       keyPressed: 'idle',
       prevKeyPressed: 'idle',
+
       isFacingLeft: false,
       isJumping: false,
 
-      walkingSpeed: 6,
-      runningSpeed: 15,
-
-      maxHealth: 1000,
-      health: 1000,
       positionX: 0,
+      scrollInterval: null,
 
-      attacks: {
-        attack: { damage: 8 },
-        attack2: { damage: 10 },
-        attack3: { damage: 16 },
-      },
       attackInterval: null,
       attackCooldown: 500,
 
@@ -126,18 +121,38 @@ export default {
 
       enemyPositionX: 1000,
       enemyId: null,
-      money: {
-        coins: {
-          silver: 0,
-          gold: 0,
-          red: 0,
+
+      player: {
+        currentCharacter: {
+          name: 'archer',
+          animations: ArcherAnimations,
         },
-        gems: {
-          blue: 0,
-          yellow: 0,
-          green: 0,
-          grey: 0,
-          red: 0,
+
+        maxHealth: 1000,
+        health: 1000,
+
+        walkingSpeed: 6,
+        runningSpeed: 15,
+
+        money: {
+          coins: {
+            silver: 0,
+            gold: 0,
+            red: 0,
+          },
+          gems: {
+            blue: 0,
+            yellow: 0,
+            green: 0,
+            grey: 0,
+            red: 0,
+          },
+        },
+
+        attacks: {
+          attack: { damage: 8 },
+          attack2: { damage: 10 },
+          attack3: { damage: 16 },
         },
       },
     };
@@ -146,28 +161,28 @@ export default {
     selectedImages() {
       switch (this.keyPressed) {
         case 'idle':
-          return this.currentCharacter.animations.idle;
+          return this.player.currentCharacter.animations.idle;
         case 'walk':
-          return this.currentCharacter.animations.walk;
+          return this.player.currentCharacter.animations.walk;
         case 'run':
-          return this.currentCharacter.animations.run;
+          return this.player.currentCharacter.animations.run;
         case 'jump':
-          return this.currentCharacter.animations.jump;
+          return this.player.currentCharacter.animations.jump;
         case 'attack':
-          return this.currentCharacter.animations.attack;
+          return this.player.currentCharacter.animations.attack;
         case 'attack2':
-          return this.currentCharacter.animations.attack2;
+          return this.player.currentCharacter.animations.attack2;
         case 'attack3':
-          return this.currentCharacter.animations.attack3;
+          return this.player.currentCharacter.animations.attack3;
         case 'dead':
-          return this.currentCharacter.animations.dead;
+          return this.player.currentCharacter.animations.dead;
         default:
           return [];
       }
     },
 
     animationLen() {
-      return this.currentCharacter.animations[this.keyPressed].length;
+      return this.player.currentCharacter.animations[this.keyPressed].length;
     },
 
     charDirection() {
@@ -177,7 +192,7 @@ export default {
     },
 
     healthPercentage() {
-      return (this.health / this.maxHealth) * 100;
+      return (this.player.health / this.player.maxHealth) * 100;
     },
 
     styleCharInAct() {
@@ -204,10 +219,10 @@ export default {
   methods: {
     switchCharacter() {
       const currentIndex = this.characters.findIndex(
-        (character) => character.name === this.currentCharacter.name,
+        (character) => character.name === this.player.currentCharacter.name,
       );
       const nextIndex = (currentIndex + 1) % this.characters.length;
-      this.currentCharacter = this.characters[nextIndex];
+      this.player.currentCharacter = this.characters[nextIndex];
     },
 
     /* eslint-disable */
@@ -223,13 +238,13 @@ export default {
     collectCoin({ currencyId }) {
       const currencyType = currencyId.split('-')[0];
 
-      this.money.coins[currencyType] += 1;
+      this.player.money.coins[currencyType] += 1;
     },
 
     collectGem({ currencyId }) {
       const currencyType = currencyId.split('-')[0];
 
-      this.money.gems[currencyType] += 1;
+      this.player.money.gems[currencyType] += 1;
     },
   },
 };
@@ -249,7 +264,7 @@ export default {
   padding: 7px;
   border-radius: 5px;
   z-index: 1012;
-  border: 2px solid #000;
+  border: 3px solid #000;
 }
 
 .coin-display {

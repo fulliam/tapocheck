@@ -99,7 +99,7 @@ export default {
 
     checkCollection() {
       const distance = this.playerPositionX - this.currencyPositionX;
-      if (distance >= -20 && distance <= 20) {
+      if (distance >= -50 && distance <= 50) {
         this.handleCollection(this.currencyId, this.type);
       }
     },
