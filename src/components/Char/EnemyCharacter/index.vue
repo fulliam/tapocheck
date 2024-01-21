@@ -1,9 +1,10 @@
 <template>
-  <div class="enemy-health-bar-outer" :style="healthBarPosition">
+  <div class="enemy-health-bar-outer" :style="healthBarPosition" v-if="health > 0">
     <div class="enemy-health-bar-inner" :style="{width: healthPercentage + '%'}">
       {{  parseInt(healthPercentage)  }}%
     </div>
   </div>
+
   <ImgEnemyCharacter
     :images="enemyImages"
     :direction="enemyDirection"
@@ -138,7 +139,7 @@ export default {
 
     healthBarPosition() {
       return {
-        left: `calc(${this.positionX}px + 200px)`,
+        left: `calc(${this.positionX}px + 100px)`,
       };
     },
 
@@ -181,7 +182,7 @@ export default {
 <style lang="scss">
 .enemy-health-bar-outer {
   position: absolute;
-  bottom: 15%;
+  top: 42%;
   width: 90px;
   height: 18px;
   background-color: rgba(34, 7, 7, 0.444);

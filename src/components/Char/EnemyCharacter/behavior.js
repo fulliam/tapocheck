@@ -60,6 +60,10 @@ export default {
       const isFacingEnemy = (this.direction === 1 && direction === 'left')
                         || (this.direction === -1 && direction === 'right');
 
+      if (this.enemyState === 'dead') {
+        return;
+      }
+
       if (this.enemyId === enemyId && isFacingEnemy) {
         this.health -= damage;
         if (this.health <= 0) {
