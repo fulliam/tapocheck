@@ -120,7 +120,7 @@ export default {
         if (this.enemyState === 'attack') {
           emitter.emit('enemy-attack', { damage: this.attacks.attack.damage, enemyId: this.enemyId });
         }
-      }, 100);
+      }, this.animationLen * this.enemyAnimationSpeed);
     },
 
     attack2() {
@@ -129,7 +129,7 @@ export default {
         if (this.enemyState === 'attack2') {
           emitter.emit('enemy-attack', { damage: this.attacks.attack2.damage, enemyId: this.enemyId });
         }
-      }, 100);
+      }, this.animationLen * this.enemyAnimationSpeed);
     },
 
     stopAndIdleEnemy() {

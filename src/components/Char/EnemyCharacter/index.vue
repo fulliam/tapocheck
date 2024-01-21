@@ -22,9 +22,12 @@ import { ArcherAnimations } from '@/assets/char/ally/archer/ArcherAnimations';
 import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnimations';
 import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
 
+import { SpiritAnimations } from '@/assets/char/enemy/spirit/SpiritAnimations';
+
 import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations';
 import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
 import { WarmorAnimations } from '@/assets/char/enemy/warmor/WarmorAnimations';
+
 import { DemonAnimations } from '@/assets/char/boss/demon2/DemonAnimations';
 import { DragonAnimations } from '@/assets/char/boss/dragon/DragonAnimations';
 
@@ -104,6 +107,8 @@ export default {
   computed: {
     enemyImages() {
       switch (this.currentCharacter) {
+        case 'Spirit':
+          return SpiritAnimations[this.enemyState];
         case 'Dragon':
           return DragonAnimations[this.enemyState];
         case 'Demon':
@@ -138,8 +143,15 @@ export default {
     },
 
     healthBarPosition() {
+      if (this.currentCharacter === 'Spirit') {
+        return {
+          left: `calc(${this.positionX}px + 200px)`,
+          top: this.currentAct !== 'ActVI' ? '42%' : '67%',
+        };
+      }
       return {
-        left: `calc(${this.positionX}px + 100px)`,
+        left: `calc(${this.positionX}px + 200px)`,
+        top: this.currentAct !== 'ActVI' ? '42%' : '62%',
       };
     },
 
@@ -147,11 +159,16 @@ export default {
       if (this.currentCharacter === 'Demon' || this.currentCharacter === 'Dragon') {
         return {
           height: '100%',
-          bottom: this.currentAct === 'ActVI' ? '-18%' : '0%',
+          bottom: this.currentAct !== 'ActVI' ? '0%' : '-18%',
+        };
+      }
+      if (this.currentCharacter === 'Spirit') {
+        return {
+          bottom: this.currentAct !== 'ActVI' ? '15%' : '0%',
         };
       }
       return {
-        bottom: this.currentAct === 'ActVI' ? '10%' : '25%',
+        bottom: this.currentAct !== 'ActVI' ? '25%' : '10%',
       };
     },
 
@@ -159,19 +176,30 @@ export default {
       if (this.currentCharacter === 'Dragon' || this.currentCharacter === 'Demon') {
         return 190;
       }
+      if (this.currentCharacter === 'Spirit') {
+        return 80;
+      }
       return 100;
+    },
+
+    animationLen() {
+      return this.enemyImages.length;
     },
   },
 
   methods: {
     switchCharacter() {
-      const characters = ['Dragon', 'Demon', 'Warmor', 'Warrior', 'Paladin', 'Archer', 'Swordsman', 'Wizard'];
+      const characters = ['Spirit', 'Dragon', 'Demon', 'Warmor', 'Warrior', 'Paladin', 'Archer', 'Swordsman', 'Wizard'];
       let currentIndex = characters.indexOf(this.currentCharacter);
       currentIndex = (currentIndex + 1) % characters.length;
       this.currentCharacter = characters[currentIndex];
     },
   },
-
+  /*
+  mounted() {
+    setInterval(console.log(this.currentAct), 1000);
+  },
+  */
   beforeUnmount() {
     clearInterval(this.enemyInterval);
     clearInterval(this.enemyStateInterval);
@@ -182,7 +210,6 @@ export default {
 <style lang="scss">
 .enemy-health-bar-outer {
   position: absolute;
-  top: 42%;
   width: 90px;
   height: 18px;
   background-color: rgba(34, 7, 7, 0.444);

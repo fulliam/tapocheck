@@ -30,6 +30,7 @@
             :initialAttacks="enemy.initialAttacks"
             :attackRange="enemy.attackRange"
             :currencyDrop="enemy.currencyDrop"
+            :currentAct="getCurrentAct()"
           />
         </template>
 
@@ -91,7 +92,6 @@ export default {
   },
 
   mounted() {
-    setInterval(console.log(currencies), 1000);
     this.setLoadingState();
     emitter.on('prevAct', this.prevAct);
     emitter.on('nextAct', this.nextAct);

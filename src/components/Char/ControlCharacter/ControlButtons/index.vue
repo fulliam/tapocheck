@@ -1,5 +1,5 @@
 <template>
-  <div class="control-buttons" v-if="deviceInfo.device !== 'Десктопный компьютер'">
+  <div class="control-buttons">
     <!--
     <div class="user-info">
       <p>{{ deviceInfo.browser }}</p>
@@ -8,6 +8,7 @@
       <p>{{ deviceInfo.referrer }}</p>
     </div>
     -->
+    {{ currentCharacter }}
     <button
       class="mobile-control left"
       @touchstart="moveLeft"
@@ -27,27 +28,28 @@
       class="mobile-control attack"
       @touchstart="attack('attack')"
       @touchend="stopAttack('attack')"
+      :style="`background-image: url(${require('@/assets/char/ally/'
+        + currentCharacter + '/skills/skill1.png')});`"
     >
       <span>
-          <img src="@/assets/char/ally/sword.png" alt=" ">
       </span>
     </button>
     <button
       class="mobile-control attack__2"
       @touchstart="attack('attack2')"
       @touchend="stopAttack('attack2')"
-    >
+      :style="`background-image: url(${require('@/assets/char/ally/'
+        + currentCharacter + '/skills/skill2.png')});`"    >
       <span>
-          <img src="@/assets/char/ally/sword.png" alt=" ">
       </span>
     </button>
     <button
       class="mobile-control attack__3"
       @touchstart="attack('attack3')"
       @touchend="stopAttack('attack3')"
-    >
+      :style="`background-image: url(${require('@/assets/char/ally/'
+        + currentCharacter + '/skills/skill3.png')});`"    >
       <span>
-          <img src="@/assets/char/ally/sword.png" alt=" ">
       </span>
     </button>
   </div>
@@ -58,6 +60,8 @@ import emitter from '@/eventBus';
 
 export default {
   name: 'ControlButtons',
+
+  props: ['currentCharacter'],
 
   data() {
     return {
@@ -126,7 +130,6 @@ export default {
     font-size: 15px;
     background-color: #7e7b7ba7;
     border-radius: 50%;
-    border: dashed blanchedalmond;
     width: 60px;
     height: 60px;
 
@@ -165,32 +168,17 @@ export default {
       bottom: 2%;
       position: fixed;
       background-color: #65d6bb87;
-
-      & span {
-        position: relative;
-        top: 2px;
-        left: -8px;
-
-        & img {
-          height: 100%;
-        }
-      }
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: cover;
 
       &__2 {
         right: 13%;
         bottom: 2%;
         position: fixed;
         background-color: rgba(0, 122, 252, 0.5);
-
-        & span {
-          position: relative;
-          top: 2px;
-          left: -8px;
-
-          & img {
-            height: 100%;
-          }
-        }
+        background-size: cover;
       }
 
       &__3 {
@@ -198,16 +186,7 @@ export default {
         bottom: 2%;
         position: fixed;
         background-color: rgba(193, 9, 138, 0.5);
-
-        & span {
-          position: relative;
-          top: 2px;
-          left: -8px;
-
-          & img {
-            height: 100%;
-          }
-        }
+        background-size: cover;
       }
     }
   }

@@ -20,7 +20,7 @@
   </div>
 
   <ImgCharacter
-    :key="currentCharacter"
+    :key="currentCharacter.name"
     :images="selectedImages"
     :direction="charDirection"
     :styleChar="styleCharInAct"
@@ -36,7 +36,7 @@
     :direction="isFacingLeft"
   />
 
-  <ControlButtons />
+  <ControlButtons :currentCharacter="currentCharacter.name" />
 </template>
 
 <script>
@@ -46,9 +46,6 @@ import { ArcherAnimations } from '@/assets/char/ally/archer/ArcherAnimations';
 import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnimations';
 import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
 import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimations';
-
-import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations';
-import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
 
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 
@@ -77,14 +74,15 @@ export default {
 
       scrollInterval: null,
       DecorationAnimations,
-      currentCharacter: WizardAnimations,
+      currentCharacter: {
+        name: 'wizard',
+        animations: WizardAnimations,
+      },
       characters: [
-        ArcherAnimations,
-        WizardAnimations,
-        SwordsmanAnimations,
-        PaladinAnimations,
-        WarriorAnimations,
-        SkeletonAnimations,
+        { name: 'archer', animations: ArcherAnimations },
+        { name: 'wizard', animations: WizardAnimations },
+        { name: 'swordsman', animations: SwordsmanAnimations },
+        { name: 'skeleton', animations: SkeletonAnimations },
       ],
       keyPressed: 'idle',
       prevKeyPressed: 'idle',
@@ -127,28 +125,28 @@ export default {
     selectedImages() {
       switch (this.keyPressed) {
         case 'idle':
-          return this.currentCharacter.idle;
+          return this.currentCharacter.animations.idle;
         case 'walk':
-          return this.currentCharacter.walk;
+          return this.currentCharacter.animations.walk;
         case 'run':
-          return this.currentCharacter.run;
+          return this.currentCharacter.animations.run;
         case 'jump':
-          return this.currentCharacter.jump;
+          return this.currentCharacter.animations.jump;
         case 'attack':
-          return this.currentCharacter.attack;
+          return this.currentCharacter.animations.attack;
         case 'attack2':
-          return this.currentCharacter.attack2;
+          return this.currentCharacter.animations.attack2;
         case 'attack3':
-          return this.currentCharacter.attack3;
+          return this.currentCharacter.animations.attack3;
         case 'dead':
-          return this.currentCharacter.dead;
+          return this.currentCharacter.animations.dead;
         default:
           return [];
       }
     },
 
     animationLen() {
-      return this.currentCharacter[this.keyPressed].length;
+      return this.currentCharacter.animations[this.keyPressed].length;
     },
 
     charDirection() {
@@ -184,7 +182,9 @@ export default {
 
   methods: {
     switchCharacter() {
-      const currentIndex = this.characters.indexOf(this.currentCharacter);
+      const currentIndex = this.characters.findIndex(
+        (character) => character.name === this.currentCharacter.name,
+      );
       const nextIndex = (currentIndex + 1) % this.characters.length;
       this.currentCharacter = this.characters[nextIndex];
     },

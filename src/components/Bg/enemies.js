@@ -151,6 +151,51 @@ export default {
     },
   ],
   ActVI: [
-
+    {
+      enemyId: 'spirit1',
+      initialCharacter: 'Spirit',
+      initialPositionX: 950,
+      initialHealth: 400,
+      initialMaxHealth: 400,
+      initialAttacks: {
+        attack: { damage: 2 },
+        attack2: { damage: 15 },
+      },
+      attackRange: 165,
+      currencyDrop: [
+        {
+          currencyId: 'yellow', type: 'gem', amount: 10, chance: 0.8,
+        },
+        {
+          currencyId: 'red', type: 'gem', amount: 5, chance: 0.3,
+        },
+        {
+          currencyId: 'grey', type: 'gem', amount: 3, chance: 0.1,
+        },
+      ],
+    },
+    {
+      enemyId: 'spirit2',
+      initialCharacter: 'Spirit',
+      initialPositionX: 1150,
+      initialHealth: 400,
+      initialMaxHealth: 400,
+      initialAttacks: {
+        attack: { damage: 2 },
+        attack2: { damage: 15 },
+      },
+      attackRange: 165,
+      currencyDrop: [
+        {
+          currencyId: 'yellow', type: 'gem', amount: 10, chance: 0.8,
+        },
+        {
+          currencyId: 'red', type: 'gem', amount: 5, chance: 0.3,
+        },
+        {
+          currencyId: 'grey', type: 'gem', amount: 3, chance: 0.1,
+        },
+      ],
+    },
   ],
 };
