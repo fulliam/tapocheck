@@ -4,20 +4,22 @@
       v-for="(cell, index) in cells"
       :key="index"
       class="cell"
-      @dragover.prevent
+      :class="{ 'drop-target': index === dropTargetIndex }"
+      @dragover.prevent="dragOver($event, index)"
       @drop="drop($event, index)"
+      @dragleave="dragLeave"
       @touchmove.prevent="drag($event, index)"
       @touchend="drop($event, index)"
     >
       <img
-        v-if="cell.image && cell.quantity > 0"
+        v-if="cell.image"
         :src="cell.image"
         :style="{ background: rarityGradients[cell.rarity] }"
         draggable="true"
         @dragstart="drag($event, index)"
         alt=" "
       />
-      <div v-if="cell.quantity > 0" class="quantity">{{ cell.quantity }}</div>
+      <div v-if="cell.quantity !== 0" class="quantity">{{ cell.quantity }}</div>
     </div>
   </div>
 </template>
@@ -33,6 +35,7 @@ export default {
       cells: items,
       draggedImage: null,
       draggedIndex: null,
+      dropTargetIndex: null,
     };
   },
 
@@ -44,6 +47,7 @@ export default {
 
     drop(event, index) {
       if (index === this.draggedIndex) {
+        this.dropTargetIndex = null;
         return;
       }
 
@@ -57,6 +61,15 @@ export default {
       }
       this.draggedImage = null;
       this.draggedIndex = null;
+      this.dropTargetIndex = null;
+    },
+
+    dragOver(event, index) {
+      this.dropTargetIndex = index;
+    },
+
+    dragLeave() {
+      this.dropTargetIndex = null;
     },
   },
 
@@ -101,11 +114,12 @@ export default {
 #grid {
   display: grid;
   grid-template-columns: repeat(8, 1fr);
-  grid-gap: 2%;
+  grid-gap: 15px;
   width: 60%;
   height: 60%;
   position: relative;
   margin: 2%;
+  margin-right: 5%;
   padding: 2%;
 
   & .cell {
@@ -114,6 +128,10 @@ export default {
     min-height: 50px;
     min-width: 50px;
     @include pixel-border( 1px, rgba(229, 229, 229, 0.45), rgba(0, 0, 0, 0) );
+
+    &.drop-target {
+      @include pixel-border( 1px, #c8b400, rgba(0, 0, 0, 0) );
+    }
 
     & img {
       width: 100%;
@@ -135,6 +153,17 @@ export default {
         width: min-content;
         height: min-content;
         border-radius: 9px 0 0 0;
+    }
+  }
+
+  @media (max-height: 536px), (max-width: 992px) {
+    & .cell {
+        min-height: 30px;
+        min-width: 30px;
+
+        & .quantity {
+            font-size: 10px;
+        }
     }
   }
 }

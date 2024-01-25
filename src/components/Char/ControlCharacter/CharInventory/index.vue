@@ -160,9 +160,10 @@ export default {
   background-color: rgba(0, 0, 0, 0.5);
   padding: 20px;
   overflow: hidden;
-  z-index: 999;
+  z-index: 1090;
   display: flex;
   flex-direction: row;
+  color: white;
   @include pixel-border( 2px, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) );
 
   &-player{
@@ -235,26 +236,30 @@ export default {
 
 .gem-display,
 .coin-display {
+  font-size: 15px;
   position: absolute;
   bottom: 3%;
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
   padding: 7px;
   border-radius: 5px;
   z-index: 1012;
-  border: 3px solid #000;
   height: 3%;
+
+  & span {
+    position: relative;
+    top: 2px;
+  }
 }
 
 .coin-display {
-  right: 34%;
+  right: 40%;
   width: 12%;
 }
 
 .gem-display {
-  right: 10%;
+  right: 15%;
   width: 20%;
 }
 
@@ -273,6 +278,17 @@ export default {
   width: 20px;
   height: 20px;
   margin-right: 5px;
-  filter: drop-shadow(0 0 0.75rem rgb(200, 180, 0));
+}
+
+@media (max-height: 536px), (max-width: 992px) {
+  .gem-item,
+  .coin-item {
+    font-size: 10px;
+
+    & img {
+      height: 15px;
+      width: 15px;
+    }
+  }
 }
 </style>
