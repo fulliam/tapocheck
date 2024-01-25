@@ -125,8 +125,8 @@ export default {
   & .cell {
     position: relative;
     background-color: #b2b1b1;
-    min-height: 50px;
-    min-width: 50px;
+    height: 50px;
+    width: 50px;
     @include pixel-border( 1px, rgba(229, 229, 229, 0.45), rgba(0, 0, 0, 0) );
 
     &.drop-target {
@@ -158,8 +158,8 @@ export default {
 
   @media (max-height: 536px), (max-width: 992px) {
     & .cell {
-        min-height: 30px;
-        min-width: 30px;
+        height: 30px;
+        width: 30px;
 
         & .quantity {
             font-size: 10px;

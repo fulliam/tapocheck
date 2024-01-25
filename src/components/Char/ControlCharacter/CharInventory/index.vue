@@ -1,5 +1,5 @@
 <template>
-  <button class="show-inventory" @click="openInventory">open</button>
+  <button class="show-inventory" @click="openInventory"></button>
   <div v-if="showInventory" class="inventory pixel-border">
     <button class="show-inventory__false" @click="showInventory = false">X</button>
 
@@ -31,37 +31,36 @@
 
     <DragCells v-if="activeTab === 0" />
 
-    <div class="coin-display">
+    <div class="coin-display" v-if="activeTab === 0" >
       <div class="coin-item" v-for="(value, key) in player.money.coins" :key="key">
         <img :src="getCoinImage(key)" alt=" " />
         <span>{{ value }}</span>
       </div>
     </div>
 
-    <div class="gem-display">
+    <div class="gem-display" v-if="activeTab === 0" >
       <div class="gem-item" v-for="(value, key) in player.money.gems" :key="key">
         <img :src="getGemImage(key)" alt=" " />
         <span>{{ value }}</span>
       </div>
     </div>
 
-    <div v-if="activeTab === 1" class="equipment">
-      <h2>Equipment</h2>
-      <!-- Display equipment here -->
+    <div v-if="activeTab === 1" class="inventory-book">
+      <h2>Book</h2>
+      <!-- Display Book here -->
     </div>
 
-    <div v-if="activeTab === 2" class="inventory-items">
-      <h2>Inventory</h2>
-      <!-- Display inventory items here -->
+    <div v-if="activeTab === 2" class="inventory-forge">
+      <h2>Forge</h2>
+      <!-- Display Forge here -->
     </div>
 
-    <div class="inventory-tabs">
+    <div class="inventory-tab-icons">
       <button
         v-for="(tab, index) in tabs"
         :key="index"
         @click="activeTab = index"
       >
-        {{ tab }}
       </button>
     </div>
   </div>
@@ -87,14 +86,14 @@ export default {
     return {
       showInventory: false,
       activeTab: 0,
-      tabs: ['Character', 'Equipment', 'Inventory'],
+      tabs: ['Bag', 'Book', 'Forge'],
       DecorationAnimations,
     };
   },
 
   methods: {
     openInventory() {
-      this.showInventory = true;
+      this.showInventory = !this.showInventory;
     },
 
     /* eslint-disable */
@@ -211,12 +210,38 @@ export default {
     }
   }
 
-  &-tabs {
+  &-tab-icons {
     display: flex;
     flex-direction: row;
     position: absolute;
-    top: -1%;
-    right: 2%;
+    top: -2%;
+    right: 12%;
+
+    & button {
+      background-size: cover;
+      background-position: center;
+      height: 60px;
+      width: 60px;
+      box-shadow: none;
+      border: none;
+      background-color: transparent;
+
+      &:hover {
+        filter: drop-shadow(0 0 1rem #ccc);
+      }
+
+      &:nth-child(1) {
+        background-image: url('@/assets/items/icons/bag2.png');
+      }
+
+      &:nth-child(2) {
+        background-image: url('@/assets/items/icons/book.png');
+      }
+
+      &:nth-child(3) {
+        background-image: url('@/assets/items/icons/forge.png');
+      }
+    }
   }
 }
 
@@ -224,7 +249,19 @@ export default {
   z-index: 999;
   position: absolute;
   top: 2%;
-  right: 10%;
+  right: 2%;
+  background-image: url('@/assets/items/icons/bag.png');
+  background-size: cover;
+  background-position: center;
+  height: 70px;
+  width: 70px;
+  box-shadow: none;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    filter: drop-shadow(0 0 1rem #ccc);
+  }
 
   &__false {
     position: absolute;
@@ -238,7 +275,7 @@ export default {
 .coin-display {
   font-size: 15px;
   position: absolute;
-  bottom: 3%;
+  bottom: 13%;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -289,6 +326,11 @@ export default {
       height: 15px;
       width: 15px;
     }
+  }
+
+  .inventory-tab-icons button {
+    height: 44px;
+    width: 44px;
   }
 }
 </style>
