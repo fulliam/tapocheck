@@ -39,6 +39,10 @@
             :currentAct="getCurrentAct()"
           />
         </template>
+
+        <template v-slot:decorations>
+
+        </template>
       </ActComponent>
       <!--
       <div
@@ -71,11 +75,13 @@ export default {
 
   data() {
     return {
-      CurrenciesAnimations,
       currentActIndex: 0,
       currentActKey: 'act-ActI',
       actsData,
+
       enemies,
+
+      CurrenciesAnimations,
       currencies,
       currencyIdKey: 0,
 

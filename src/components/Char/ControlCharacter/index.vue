@@ -8,20 +8,6 @@
     {{ player.currentCharacter.name }}
   </p>
 
-  <div class="coin-display">
-    <div class="coin-item" v-for="(value, key) in player.money.coins" :key="key">
-      <img :src="getCoinImage(key)" alt=" " />
-      <span>{{ value }}</span>
-    </div>
-  </div>
-
-  <div class="gem-display">
-    <div class="gem-item" v-for="(value, key) in player.money.gems" :key="key">
-      <img :src="getGemImage(key)" alt=" " />
-      <span>{{ value }}</span>
-    </div>
-  </div>
-
   <ImgCharacter
     :key="player.currentCharacter.name"
     :images="selectedImages"
@@ -40,6 +26,7 @@
                 ? arrow.positionX + 0 : arrow.positionX + 350) + 'px',              zIndex: '1001',
               bottom: (currentAct === 'ActVI' ? '15%' : '31%'),
               height: '17%',
+              zIndex: 888,
             }"
     alt=" "
   />
@@ -49,8 +36,9 @@
     :isActive="keyPressed === 'run'? true : false"
     :images="DecorationAnimations.effect.runSmoke"
     :styleDecoration="styleCharInAct"
-    :charPosition="positionX"
+    :positionX="positionX"
     :direction="isFacingLeft"
+    :cycleIntervalSpeed="2400"
   />
 
   <ControlButtons :currentCharacter="player.currentCharacter.name" />
@@ -67,7 +55,7 @@ import { ArcherAnimations } from '@/assets/char/ally/archer/ArcherAnimations';
 import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnimations';
 import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
 import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimations';
-
+// only runSmoke is used, need fix imports
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 
 import ImgDecorations from '@/components/Decorations/ImgDecorations/index.vue';
@@ -225,16 +213,6 @@ export default {
       this.player.currentCharacter = this.characters[nextIndex];
     },
 
-    /* eslint-disable */
-    getCoinImage(key) {
-      return require(`@/assets/currencies/coins/${key}/${key}Coin1.png`);
-    },
-
-    getGemImage(key) {
-      return require(`@/assets/currencies/gems/${key}/${key}Gem1.png`);
-    },
-    /* eslint-enable */
-
     collectCoin({ currencyId }) {
       const currencyType = currencyId.split('-')[0];
 
@@ -252,44 +230,4 @@ export default {
 
 <style lang="scss">
 @import url('@/assets/char/hpbar/index.scss');
-
-.gem-display,
-.coin-display {
-  position: absolute;
-  right: 10px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 7px;
-  border-radius: 5px;
-  z-index: 1012;
-  border: 3px solid #000;
-}
-
-.coin-display {
-  top: 3%;
-}
-
-.gem-display {
-  top: 20%;
-}
-
-.gem-item,
-.coin-item {
-  display: flex;
-  align-items: center;
-
-  & span {
-    color: #fff;
-  }
-}
-
-.gem-item img,
-.coin-item img {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
-  filter: drop-shadow(0 0 0.75rem rgb(200, 180, 0));
-}
 </style>

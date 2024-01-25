@@ -27,6 +27,7 @@ import { SpiritAnimations } from '@/assets/char/enemy/spirit/SpiritAnimations';
 import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations';
 import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
 import { WarmorAnimations } from '@/assets/char/enemy/warmor/WarmorAnimations';
+import { WolfAnimations } from '@/assets/char/enemy/wolf/black/WolfAnimations';
 
 import { DemonAnimations } from '@/assets/char/boss/demon2/DemonAnimations';
 import { DragonAnimations } from '@/assets/char/boss/dragon/DragonAnimations';
@@ -107,6 +108,8 @@ export default {
   computed: {
     enemyImages() {
       switch (this.currentCharacter) {
+        case 'Wolf':
+          return WolfAnimations[this.enemyState];
         case 'Spirit':
           return SpiritAnimations[this.enemyState];
         case 'Dragon':
@@ -189,17 +192,13 @@ export default {
 
   methods: {
     switchCharacter() {
-      const characters = ['Spirit', 'Dragon', 'Demon', 'Warmor', 'Warrior', 'Paladin', 'Archer', 'Swordsman', 'Wizard'];
+      const characters = ['Wolf', 'Spirit', 'Dragon', 'Demon', 'Warmor', 'Warrior', 'Paladin', 'Archer', 'Swordsman', 'Wizard'];
       let currentIndex = characters.indexOf(this.currentCharacter);
       currentIndex = (currentIndex + 1) % characters.length;
       this.currentCharacter = characters[currentIndex];
     },
   },
-  /*
-  mounted() {
-    setInterval(console.log(this.currentAct), 1000);
-  },
-  */
+
   beforeUnmount() {
     clearInterval(this.enemyInterval);
     clearInterval(this.enemyStateInterval);

@@ -11,7 +11,7 @@
 <script>
 export default {
   name: 'ImgDecorations',
-  props: ['images', 'styleDecoration', 'charPosition', 'direction', 'isActive'],
+  props: ['images', 'styleDecoration', 'positionX', 'direction', 'isActive', 'cycleIntervalSpeed'],
   data() {
     return {
       currentImageIndex: 0,
@@ -19,7 +19,7 @@ export default {
     };
   },
   mounted() {
-    this.cycleIntervalId = setInterval(this.startAnimation, 2400);
+    this.cycleIntervalId = setInterval(this.startAnimation, this.cycleIntervalSpeed);
   },
   beforeUnmount() {
     clearInterval(this.cycleIntervalId);
@@ -47,12 +47,12 @@ export default {
     decorationPosition() {
       if (this.direction) {
         return {
-          left: `calc(${this.charPosition}px + 15%)`,
+          left: `calc(${this.positionX}px + 15%)`,
           transform: 'scale(-1, 1)',
         };
       }
       return {
-        left: `calc(${this.charPosition}px - 13%)`,
+        left: `calc(${this.positionX}px - 13%)`,
         transform: 'none',
       };
     },
