@@ -44,7 +44,17 @@
   <ControlButtons :currentCharacter="player.currentCharacter.name" />
 
   <CharInventory
+    v-if="player"
     :player="player"
+    :show="showInventory"
+    @toggle-inventory="showModalcloseOtherModal('inventory')"
+  />
+
+  <CharShop
+    v-if="player"
+    :player="player"
+    :show="showShop"
+    @toggle-shop="showModalcloseOtherModal('shop')"
   />
 </template>
 
@@ -58,12 +68,13 @@ import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimatio
 // only runSmoke is used, need fix imports
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 
-import ImgDecorations from '@/components/Decorations/ImgDecorations/index.vue';
+import ImgDecorations from '../../Decorations/ImgDecorations/index.vue';
 import ImgCharacter from './ImgCharacter/index.vue';
 
 import Control from './control';
 import ControlButtons from './ControlButtons/index.vue';
-import CharInventory from './CharInventory/index.vue';
+import CharInventory from '../../PlayerContent/CharInventory/index.vue';
+import CharShop from '../../PlayerContent/CharShop/index.vue';
 
 export default {
   name: 'ControlCharacter',
@@ -75,6 +86,7 @@ export default {
     ImgDecorations,
     ControlButtons,
     CharInventory,
+    CharShop,
   },
 
   props: ['currentAct'],
@@ -143,6 +155,8 @@ export default {
           attack3: { damage: 16 },
         },
       },
+      showShop: false,
+      showInventory: false,
     };
   },
   computed: {
@@ -223,6 +237,16 @@ export default {
       const currencyType = currencyId.split('-')[0];
 
       this.player.money.gems[currencyType] += 1;
+    },
+
+    showModalcloseOtherModal(modal) {
+      if (modal === 'shop') {
+        this.showShop = !this.showShop;
+        this.showInventory = false;
+      } else if (modal === 'inventory') {
+        this.showInventory = !this.showInventory;
+        this.showShop = false;
+      }
     },
   },
 };

@@ -5,11 +5,13 @@
       :key="index"
       class="cell"
       :class="{ 'drop-target': index === dropTargetIndex }"
+      :data-id="index"
       @dragover.prevent="dragOver($event, index)"
       @drop="drop($event, index)"
       @dragleave="dragLeave"
-      @touchmove.prevent="drag($event, index)"
-      @touchend="drop($event, index)"
+      @touchstart="touchStart($event, index)"
+      @touchmove.prevent="touchMove($event)"
+      @touchend="touchEnd($event, index)"
     >
       <img
         v-if="cell.image"
@@ -70,6 +72,40 @@ export default {
 
     dragLeave() {
       this.dropTargetIndex = null;
+    },
+
+    touchStart(event, index) {
+      this.draggedImage = this.cells[index];
+      this.draggedIndex = index;
+
+      this.startPos = {
+        x: event.touches[0].clientX,
+        y: event.touches[0].clientY,
+      };
+    },
+
+    touchMove(event) {
+      if (!this.draggedImage) return;
+      /* eslint-disable-next-line max-len */
+      const elementUnderFinger = document.elementFromPoint(event.touches[0].clientX, event.touches[0].clientY);
+
+      const newDropTargetIndex = Number(elementUnderFinger.dataset.id);
+
+      if (!elementUnderFinger || elementUnderFinger.dataset.id === undefined) {
+        this.dropTargetIndex = null;
+        return;
+      }
+
+      if (newDropTargetIndex !== this.dropTargetIndex) {
+        this.dropTargetIndex = newDropTargetIndex;
+      }
+    },
+
+    touchEnd(event, index) {
+      console.log(index);
+      if (this.dropTargetIndex !== null) {
+        this.drop(event, this.dropTargetIndex);
+      }
     },
   },
 

@@ -1,8 +1,15 @@
 <template>
-  <button class="show-inventory" @click="openInventory"></button>
-  <div v-if="showInventory" class="inventory pixel-border">
-    <button class="show-inventory__false" @click="showInventory = false">X</button>
+  <button class="show-inventory" @click="toggleInventory"></button>
 
+  <ModalWindow
+    :tabs="['Bag', 'Book', 'Forge']"
+    :show="show"
+    :coins="player.money.coins"
+    :gems="player.money.gems"
+    @close="toggleInventory"
+    @activeTab="activeTab = $event"
+    baseClass="inventory"
+  >
     <div v-if="activeTab === 0" class="inventory-player__info">
       <div class="inventory-player__bg-img">
         <ImgDecorations
@@ -31,20 +38,6 @@
 
     <DragCells v-if="activeTab === 0" />
 
-    <div class="coin-display" v-if="activeTab === 0" >
-      <div class="coin-item" v-for="(value, key) in player.money.coins" :key="key">
-        <img :src="getCoinImage(key)" alt=" " />
-        <span>{{ value }}</span>
-      </div>
-    </div>
-
-    <div class="gem-display" v-if="activeTab === 0" >
-      <div class="gem-item" v-for="(value, key) in player.money.gems" :key="key">
-        <img :src="getGemImage(key)" alt=" " />
-        <span>{{ value }}</span>
-      </div>
-    </div>
-
     <div v-if="activeTab === 1" class="inventory-book">
       <h2>Book</h2>
       <!-- Display Book here -->
@@ -54,57 +47,38 @@
       <h2>Forge</h2>
       <!-- Display Forge here -->
     </div>
-
-    <div class="inventory-tab-icons">
-      <button
-        v-for="(tab, index) in tabs"
-        :key="index"
-        @click="activeTab = index"
-      >
-      </button>
-    </div>
-  </div>
+  </ModalWindow>
 </template>
 
 <script>
 // only dots is used, need fix imports
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
-import ImgDecorations from '@/components/Decorations/ImgDecorations/index.vue';
+import ModalWindow from '../ModalWindow/index.vue';
+import ImgDecorations from '../../Decorations/ImgDecorations/index.vue';
 import DragCells from './DragCells/index.vue';
 
 export default {
   name: 'CharInventory',
 
-  props: ['player'],
+  props: ['player', 'show'],
 
   components: {
     ImgDecorations,
     DragCells,
+    ModalWindow,
   },
 
   data() {
     return {
-      showInventory: false,
       activeTab: 0,
-      tabs: ['Bag', 'Book', 'Forge'],
       DecorationAnimations,
     };
   },
 
   methods: {
-    openInventory() {
-      this.showInventory = !this.showInventory;
+    toggleInventory() {
+      this.$emit('toggle-inventory', 'inventory');
     },
-
-    /* eslint-disable */
-    getCoinImage(key) {
-      return require(`@/assets/currencies/coins/${key}/${key}Coin1.png`);
-    },
-
-    getGemImage(key) {
-      return require(`@/assets/currencies/gems/${key}/${key}Gem1.png`);
-    },
-    /* eslint-enable */
   },
 
   computed: {
@@ -150,21 +124,6 @@ export default {
 }
 
 .inventory {
-  position: absolute;
-  margin: 4%;
-  margin-top: 8%;
-  left: 5%;
-  width: 80%;
-  height: 60%;
-  background-color: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  overflow: hidden;
-  z-index: 1090;
-  display: flex;
-  flex-direction: row;
-  color: white;
-  @include pixel-border( 2px, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) );
-
   &-player{
     &__info {
       display: flex;
@@ -203,9 +162,10 @@ export default {
       @include pixel-border( 2px, rgba(213, 184, 0, 0.45),  rgba(0, 0, 0, 0) );
 
       & p {
+        font-size: 18px;
         white-space: nowrap;
         position: relative;
-        top: -20%;
+        top: -18%;
       }
     }
   }
@@ -214,7 +174,7 @@ export default {
     display: flex;
     flex-direction: row;
     position: absolute;
-    top: -2%;
+    top: -12%;
     right: 12%;
 
     & button {
@@ -265,56 +225,15 @@ export default {
 
   &__false {
     position: absolute;
-    right: 10px;
-    bottom: 10px;
+    right: -15px;
+    top: -15px;
     width: 60px;
+    height: 60px;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    color: brown;
   }
-}
-
-.gem-display,
-.coin-display {
-  font-size: 15px;
-  position: absolute;
-  bottom: 13%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  padding: 7px;
-  border-radius: 5px;
-  z-index: 1012;
-  height: 3%;
-
-  & span {
-    position: relative;
-    top: 2px;
-  }
-}
-
-.coin-display {
-  right: 40%;
-  width: 12%;
-}
-
-.gem-display {
-  right: 15%;
-  width: 20%;
-}
-
-.gem-item,
-.coin-item {
-  display: flex;
-  align-items: center;
-
-  & span {
-    color: #fff;
-  }
-}
-
-.gem-item img,
-.coin-item img {
-  width: 20px;
-  height: 20px;
-  margin-right: 5px;
 }
 
 @media (max-height: 536px), (max-width: 992px) {
@@ -328,9 +247,23 @@ export default {
     }
   }
 
+  .coin-display {
+    right: 48%;
+    width: 12%;
+  }
+
+  .gem-display {
+    right: 19%;
+    width: 20%;
+  }
+
   .inventory-tab-icons button {
     height: 44px;
     width: 44px;
+  }
+
+  .inventory-player__characteristics p {
+    font-size: 12px;
   }
 }
 </style>

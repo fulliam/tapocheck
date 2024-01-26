@@ -129,9 +129,11 @@ export default {
     border-radius: 50%;
     width: 60px;
     height: 60px;
+    border: none;
+    box-shadow: 0 0 5px black;
 
     &:active {
-        background-color: lighten(#7e7b7ba7, 15%);
+      filter: drop-shadow(0 0 1rem #ccc);
     }
 
     &.left {
@@ -148,16 +150,16 @@ export default {
     }
 
     &.right {
-        & span {
-            transform: rotate(45deg);
-            display: inline-block;
-            width: 15px;
-            height: 15px;
-            border-top: 8px solid #fff;
-            border-right: 8px solid #fff;
-            position: relative;
-            left: -3px;
-        }
+      & span {
+        transform: rotate(45deg);
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-top: 8px solid #fff;
+        border-right: 8px solid #fff;
+        position: relative;
+        left: -3px;
+      }
     }
 
     &.attack {
