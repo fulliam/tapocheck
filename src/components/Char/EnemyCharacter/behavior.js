@@ -66,6 +66,7 @@ export default {
 
       if (this.enemyId === enemyId && isFacingEnemy) {
         this.health -= damage;
+        this.damageIndicators.push(damage);
         if (this.health <= 0) {
           clearInterval(this.enemyInterval);
           clearInterval(this.enemyStateInterval);
@@ -76,6 +77,10 @@ export default {
           emitter.emit('spawn-money', { positionX: this.positionX, money: this.money });
         }
       }
+    },
+
+    removeDamageIndicator(index) {
+      this.damageIndicators.splice(index, 1);
     },
 
     installEnemyState() {

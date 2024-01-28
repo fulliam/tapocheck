@@ -1,11 +1,13 @@
 <template>
   <div class="control-buttons">
-    <div class="user-info">
+    <!--
+    <div class="dev-user-info">
       <p>{{ deviceInfo.browser }}</p>
       <p>{{ deviceInfo.device }}</p>
       <p>{{ deviceInfo.os }}</p>
       <p>{{ deviceInfo.referrer }}</p>
     </div>
+    -->
     <button
       class="mobile-control left"
       @touchstart="moveLeft"
@@ -190,7 +192,7 @@ export default {
     }
   }
 
-  & .user-info {
+  & .dev-user-info {
     position: fixed;
     top: 50px;
     left: 20px;

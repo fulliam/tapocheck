@@ -36,8 +36,11 @@ export default {
   },
   watch: {
     state(newVal, oldVal) {
+      if (newVal !== oldVal) {
+        this.currentImageIndex = 0;
+      }
       if (newVal === 'dead' && oldVal !== 'dead') {
-        this.handleDeath();
+        this.handleDeath(this.enemyId);
       }
     },
   },

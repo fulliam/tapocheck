@@ -290,12 +290,17 @@ export default {
       this.enemyPositionX = enemyPositionX;
       this.enemyId = enemyId;
       this.player.health -= damage;
+      this.damageIndicators.push(damage);
       if (this.player.health <= 0) {
         this.keyPressed = 'dead';
         this.player.health = 0;
 
         emitter.emit('character-dead' /* who is dead? */);
       }
+    },
+
+    removeDamageIndicator(index) {
+      this.damageIndicators.splice(index, 1);
     },
 
     updateCharacterPositionX() {

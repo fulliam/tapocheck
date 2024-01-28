@@ -16,6 +16,15 @@
     :state="keyPressed"
   />
 
+  <DamageIndicator
+    v-for="(damage, index) in damageIndicators"
+    :key="index"
+    :damage="damage"
+    :positionX="positionX"
+    :color="'red'"
+    @animation-end="removeDamageIndicator(index)"
+  />
+
   <!-- archer arrow -->
   <img
     src="@/assets/char/ally/archer/arrow/arrow.png"
@@ -77,6 +86,8 @@ import ControlButtons from './ControlButtons/index.vue';
 import CharInventory from '../../PlayerContent/CharInventory/index.vue';
 import CharShop from '../../PlayerContent/CharShop/index.vue';
 
+import DamageIndicator from '../DamageIndicaor/index.vue';
+
 export default {
   name: 'ControlCharacter',
 
@@ -88,6 +99,7 @@ export default {
     ControlButtons,
     CharInventory,
     CharShop,
+    DamageIndicator,
   },
 
   props: ['currentAct'],
@@ -192,6 +204,7 @@ export default {
       },
       showShop: false,
       showInventory: false,
+      damageIndicators: [],
     };
   },
   computed: {

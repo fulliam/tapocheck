@@ -14,12 +14,21 @@
     :state="enemyState"
     :animationSpeed="enemyAnimationSpeed"
     :enemyId="enemyId"
-    :style="{ filter: enemyIsDead ? 'drop-shadow(0px 0px 4px blueviolet)' : 'none',
+    :style="{ filter: enemyIsDead ? 'drop-shadow(0px 0px 4px yellow)' : 'none',
               zIndex: enemyIsDead ? '1020' : 'none',
             }"
     @click="toggleEnemyInventory"
     @keydown.q="toggleEnemyInventory"
     @touch="toggleEnemyInventory"
+  />
+
+  <DamageIndicator
+    v-for="(damage, index) in damageIndicators"
+    :key="index"
+    :damage="damage"
+    :positionX="positionX"
+    :color="'orange'"
+    @animation-end="removeDamageIndicator(index)"
   />
 
   <EnemyInventory
@@ -35,9 +44,14 @@ import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations
 import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
 import { WarmorAnimations } from '@/assets/char/enemy/warmor/WarmorAnimations';
 
+import { orcWarriorAnimations } from '@/assets/char/enemy/orcs/warrior/OrcWarriorAnimations';
+import { orcShamanAnimations } from '@/assets/char/enemy/orcs/shaman/OrcShamanAnimations';
+import { orcBerserkAnimations } from '@/assets/char/enemy/orcs/berserk/OrcBerserkAnimations';
+
 import ImgEnemyCharacter from './ImgEnemyCharacter/index.vue';
 import behavior from './behavior';
 import EnemyInventory from './EnemyInventory/index.vue';
+import DamageIndicator from '../DamageIndicaor/index.vue';
 
 export default {
   name: 'EnemyCharacter',
@@ -47,6 +61,7 @@ export default {
   components: {
     ImgEnemyCharacter,
     EnemyInventory,
+    DamageIndicator,
   },
 
   props: {
@@ -56,19 +71,15 @@ export default {
     },
     initialCharacter: {
       type: String,
-      default: 'Warrior',
     },
     initialPositionX: {
       type: Number,
-      default: 600,
     },
     initialHealth: {
       type: Number,
-      default: 100,
     },
     initialMaxHealth: {
       type: Number,
-      default: 100,
     },
     initialAttacks: {
       type: Array,
@@ -79,7 +90,6 @@ export default {
     },
     attackRange: {
       type: Number,
-      default: 230,
     },
     currencyDrop: {
       type: Array,
@@ -108,12 +118,19 @@ export default {
 
       money: this.currencyDrop,
       checkEnemyInventory: false,
+      damageIndicators: [],
     };
   },
 
   computed: {
     enemyImages() {
       switch (this.currentCharacter) {
+        case 'orcWarrior':
+          return orcWarriorAnimations[this.enemyState];
+        case 'orcShaman':
+          return orcShamanAnimations[this.enemyState];
+        case 'orcBerserk':
+          return orcBerserkAnimations[this.enemyState];
         case 'Spirit':
           return SpiritAnimations[this.enemyState];
         case 'Warmor':
@@ -140,14 +157,8 @@ export default {
     },
 
     healthBarPosition() {
-      if (this.currentCharacter === 'Spirit') {
-        return {
-          left: `calc(${this.positionX}px + 200px)`,
-          top: this.currentAct !== 'ActVI' ? '42%' : '67%',
-        };
-      }
       return {
-        left: `calc(${this.positionX}px + 200px)`,
+        left: `calc(${this.positionX}px + 60px)`,
         top: this.currentAct !== 'ActVI' ? '42%' : '62%',
       };
     },
@@ -156,6 +167,12 @@ export default {
       if (this.currentCharacter === 'Spirit') {
         return {
           bottom: this.currentAct !== 'ActVI' ? '15%' : '0%',
+        };
+      }
+      if (this.currentCharacter.includes('orc')) {
+        return {
+          bottom: this.currentAct !== 'ActVI' ? '25%' : '10%',
+          height: '40%',
         };
       }
       return {
@@ -182,7 +199,7 @@ export default {
 
   methods: {
     switchCharacter() {
-      const characters = ['Spirit', 'Warmor', 'Warrior', 'Paladin'];
+      const characters = ['orcWarrior', 'orcShaman', 'orcBerserk', 'Spirit', 'Warmor', 'Warrior', 'Paladin'];
       let currentIndex = characters.indexOf(this.currentCharacter);
       currentIndex = (currentIndex + 1) % characters.length;
       this.currentCharacter = characters[currentIndex];
