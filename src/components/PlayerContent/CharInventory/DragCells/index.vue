@@ -22,19 +22,20 @@
         alt=" "
       />
       <div v-if="cell.quantity !== 0" class="quantity">{{ cell.quantity }}</div>
+      <div v-if="cell.description" class="tooltip">{{ cell.description }}</div>
     </div>
   </div>
 </template>
 
 <script>
-import items from './items';
-
 export default {
   name: 'DragCells',
 
+  props: ['items'],
+
   data() {
     return {
-      cells: items,
+      cells: this.items,
       draggedImage: null,
       draggedIndex: null,
       dropTargetIndex: null,
@@ -124,83 +125,5 @@ export default {
 </script>
 
 <style lang="scss">
-// need add adaptive
-
-@mixin pixel-border( $width, $color, $bgcolor ) {
-  box-shadow:
-    4*$width 0 $bgcolor,
-    -4*$width 0 $bgcolor,
-    0 (-4*$width) $bgcolor,
-    0 4*$width $bgcolor,
-    $width 0 0 2*$width $bgcolor,
-    -$width 0 0 2*$width $bgcolor,
-    0 (-$width) 0 2*$width $bgcolor,
-    0 $width 0 2*$width $bgcolor,
-    5*$width 0 $color,
-    -5*$width 0 $color,
-    0 (-5*$width) $color,
-    0 5*$width $color,
-    0 0 0 3*$width $color,
-    0 2*$width 0 2*$width $color,
-    0 (-2*$width) 0 2*$width $color,
-    2*$width 0 0 2*$width $color,
-    (-2*$width) 0 0 2*$width $color;
-}
-
-#grid {
-  display: grid;
-  grid-template-columns: repeat(8, 1fr);
-  grid-gap: 15px;
-  width: 60%;
-  height: 60%;
-  position: relative;
-  margin: 2%;
-  margin-right: 5%;
-  padding: 2%;
-
-  & .cell {
-    position: relative;
-    background-color: #b2b1b1;
-    height: 50px;
-    width: 50px;
-    @include pixel-border( 1px, rgba(229, 229, 229, 0.45), rgba(0, 0, 0, 0) );
-
-    &.drop-target {
-      @include pixel-border( 1px, #c8b400, rgba(0, 0, 0, 0) );
-    }
-
-    & img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      cursor: grab;
-      border-radius: 5px;
-    }
-
-    & .quantity {
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        font-size: 15px;
-        color: #c8b400;
-        padding: 2px;
-        padding-left: 5px;
-        background: #000000f7;
-        width: min-content;
-        height: min-content;
-        border-radius: 9px 0 0 0;
-    }
-  }
-
-  @media (max-height: 536px), (max-width: 992px) {
-    & .cell {
-        height: 30px;
-        width: 30px;
-
-        & .quantity {
-            font-size: 10px;
-        }
-    }
-  }
-}
+@import '@/assets/styles/PlayerContent/Inventory/DragCells/index.scss';
 </style>

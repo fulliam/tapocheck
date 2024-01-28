@@ -1,0 +1,66 @@
+.shop {
+  &-tab-icons {
+    display: flex;
+    flex-direction: row;
+    position: absolute;
+    top: -12%;
+    right: 12%;
+
+    & button {
+      background-size: cover;
+      background-position: center;
+      height: 60px;
+      width: 60px;
+      box-shadow: none;
+      border: none;
+      background-color: transparent;
+
+      &:hover {
+        filter: drop-shadow(0 0 1rem #ccc);
+      }
+
+      &:nth-child(1) {
+        background-image: url('@/assets/items/icons/coins.png');
+      }
+
+      &:nth-child(2) {
+        background-image: url('@/assets/items/icons/money.png');
+      }
+
+      &:nth-child(3) {
+        background-image: url('@/assets/items/icons/roll.png');
+      }
+    }
+  }
+}
+
+.show-shop {
+  z-index: 999;
+  position: absolute;
+  top: 2%;
+  right: 12%;
+  background-image: url('@/assets/items/icons/coin.png');
+  background-size: cover;
+  background-position: center;
+  height: 70px;
+  width: 70px;
+  box-shadow: none;
+  border: none;
+  background-color: transparent;
+
+  &:hover {
+    filter: drop-shadow(0 0 1rem #ccc);
+  }
+
+  &__false {
+    position: absolute;
+    right: -15px;
+    top: -15px;
+    width: 60px;
+    height: 60px;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    color: brown;
+  }
+}

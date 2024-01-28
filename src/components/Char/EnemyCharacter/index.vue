@@ -14,26 +14,30 @@
     :state="enemyState"
     :animationSpeed="enemyAnimationSpeed"
     :enemyId="enemyId"
+    :style="{ filter: enemyIsDead ? 'drop-shadow(0px 0px 4px blueviolet)' : 'none',
+              zIndex: enemyIsDead ? '1020' : 'none',
+            }"
+    @click="toggleEnemyInventory"
+    @keydown.q="toggleEnemyInventory"
+    @touch="toggleEnemyInventory"
+  />
+
+  <EnemyInventory
+    ref="enemyInventory"
+    :enemyIsDead="enemyIsDead"
+    :positionX="positionX"
   />
 </template>
 
 <script>
-import { ArcherAnimations } from '@/assets/char/ally/archer/ArcherAnimations';
-import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnimations';
-import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
-
 import { SpiritAnimations } from '@/assets/char/enemy/spirit/SpiritAnimations';
-
 import { PaladinAnimations } from '@/assets/char/enemy/paladin/PaladinAnimations';
 import { WarriorAnimations } from '@/assets/char/enemy/warrior/WarriorAnimations';
 import { WarmorAnimations } from '@/assets/char/enemy/warmor/WarmorAnimations';
-import { WolfAnimations } from '@/assets/char/enemy/wolf/black/WolfAnimations';
-
-import { DemonAnimations } from '@/assets/char/boss/demon2/DemonAnimations';
-import { DragonAnimations } from '@/assets/char/boss/dragon/DragonAnimations';
 
 import ImgEnemyCharacter from './ImgEnemyCharacter/index.vue';
 import behavior from './behavior';
+import EnemyInventory from './EnemyInventory/index.vue';
 
 export default {
   name: 'EnemyCharacter',
@@ -42,6 +46,7 @@ export default {
 
   components: {
     ImgEnemyCharacter,
+    EnemyInventory,
   },
 
   props: {
@@ -102,32 +107,21 @@ export default {
       lastAttack: 'attack2',
 
       money: this.currencyDrop,
+      checkEnemyInventory: false,
     };
   },
 
   computed: {
     enemyImages() {
       switch (this.currentCharacter) {
-        case 'Wolf':
-          return WolfAnimations[this.enemyState];
         case 'Spirit':
           return SpiritAnimations[this.enemyState];
-        case 'Dragon':
-          return DragonAnimations[this.enemyState];
-        case 'Demon':
-          return DemonAnimations[this.enemyState];
         case 'Warmor':
           return WarmorAnimations[this.enemyState];
         case 'Warrior':
           return WarriorAnimations[this.enemyState];
         case 'Paladin':
           return PaladinAnimations[this.enemyState];
-        case 'Archer':
-          return ArcherAnimations[this.enemyState];
-        case 'Swordsman':
-          return SwordsmanAnimations[this.enemyState];
-        case 'Wizard':
-          return WizardAnimations[this.enemyState];
         default:
           return WarriorAnimations[this.enemyState];
       }
@@ -159,12 +153,6 @@ export default {
     },
 
     styleEnemyInAct() {
-      if (this.currentCharacter === 'Demon' || this.currentCharacter === 'Dragon') {
-        return {
-          height: '100%',
-          bottom: this.currentAct !== 'ActVI' ? '0%' : '-18%',
-        };
-      }
       if (this.currentCharacter === 'Spirit') {
         return {
           bottom: this.currentAct !== 'ActVI' ? '15%' : '0%',
@@ -176,9 +164,6 @@ export default {
     },
 
     enemyAnimationSpeed() {
-      if (this.currentCharacter === 'Dragon' || this.currentCharacter === 'Demon') {
-        return 190;
-      }
       if (this.currentCharacter === 'Spirit') {
         return 80;
       }
@@ -188,14 +173,25 @@ export default {
     animationLen() {
       return this.enemyImages.length;
     },
+
+    enemyIsDead() {
+      const distanceToPlayer = Math.abs(this.positionX - this.playerPositionX);
+      return this.enemyState === 'dead' && distanceToPlayer <= 150;
+    },
   },
 
   methods: {
     switchCharacter() {
-      const characters = ['Wolf', 'Spirit', 'Dragon', 'Demon', 'Warmor', 'Warrior', 'Paladin', 'Archer', 'Swordsman', 'Wizard'];
+      const characters = ['Spirit', 'Warmor', 'Warrior', 'Paladin'];
       let currentIndex = characters.indexOf(this.currentCharacter);
       currentIndex = (currentIndex + 1) % characters.length;
       this.currentCharacter = characters[currentIndex];
+    },
+
+    toggleEnemyInventory() {
+      if (this.enemyIsDead) {
+        this.$refs.enemyInventory.toggleInventory();
+      }
     },
   },
 

@@ -8,6 +8,7 @@
       <router-link to="/">[Game]</router-link>
     </nav>
   </SideMenu>
+
   <div class="dev">
     <MusicPlayer
       style="opacity: 0;
@@ -16,8 +17,12 @@
              width: 0;
              height: 0;"
     />
+
     <DeviceInfo />
+
+    <button class="fullscreen-btn" @click="toggleFullScreen"></button>
   </div>
+
   <router-view @contextmenu.prevent/>
 </template>
 
@@ -31,6 +36,26 @@ export default {
     SideMenu,
     MusicPlayer,
     DeviceInfo,
+  },
+  methods: {
+    toggleFullScreen() {
+      if (!document.fullscreenElement) {
+        this.openFullScreen(document.documentElement);
+      } else if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    },
+    openFullScreen(element) {
+      if (element.requestFullscreen) {
+        element.requestFullscreen();
+      } else if (element.mozRequestFullScreen) { /* Firefox */
+        element.mozRequestFullScreen();
+      } else if (element.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        element.webkitRequestFullscreen();
+      } else if (element.msRequestFullscreen) { /* IE/Edge */
+        element.msRequestFullscreen();
+      }
+    },
   },
   mounted() {
     window.addEventListener('contextmenu', (event) => {
@@ -162,5 +187,19 @@ button {
     border-color: orange;
     color: orange;
   }
+}
+
+.fullscreen-btn {
+  position: absolute;
+  top: 2%;
+  left: 9%;
+  width: 32px;
+  height: 32px;
+  background-image: url('@/assets/items/icons/gift.png');
+  background-size: cover;
+  background-position: center;
+  background-color: transparent;
+  box-shadow: none;
+  border: none;
 }
 </style>

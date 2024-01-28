@@ -1,0 +1,95 @@
+@import '@/assets/styles/PixelBorder/index.scss';
+
+.player-modal {
+  position: absolute;
+  margin: 4%;
+  margin-top: 8%;
+  left: 5%;
+  width: 80%;
+  height: 60%;
+  background-color: rgba(0, 0, 0, 0.85);
+  padding: 20px;
+  z-index: 1090;
+  display: flex;
+  flex-direction: row;
+  color: white;
+  @include pixel-border( 2px, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.25) );
+}
+
+.gem-display,
+.coin-display {
+  font-size: 15px;
+  position: absolute;
+  bottom: 1%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 7px;
+  border-radius: 5px;
+  z-index: 1012;
+  height: 3%;
+
+  & span {
+    position: relative;
+    top: 2px;
+  }
+}
+
+.coin-display {
+  right: 40%;
+  width: 12%;
+}
+
+.gem-display {
+  right: 15%;
+  width: 20%;
+}
+
+.gem-item,
+.coin-item {
+  display: flex;
+  align-items: center;
+
+  & span {
+    color: #fff;
+  }
+}
+
+.gem-item img,
+.coin-item img {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+@media (max-height: 536px), (max-width: 992px) {
+  .gem-item,
+  .coin-item {
+    font-size: 10px;
+
+    & img {
+      height: 15px;
+      width: 15px;
+    }
+  }
+
+  .coin-display {
+    right: 40%;
+    width: 12%;
+  }
+
+  .gem-display {
+    right: 14%;
+    width: 20%;
+  }
+
+  .inventory-tab-icons button,
+  .shop-tab-icons button  {
+    height: 44px;
+    width: 44px;
+  }
+
+  .inventory-player__characteristics p {
+    font-size: 12px;
+  }
+}

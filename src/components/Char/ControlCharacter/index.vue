@@ -68,6 +68,7 @@ import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimatio
 // only runSmoke is used, need fix imports
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 
+import Inventory from './inventory';
 import ImgDecorations from '../../Decorations/ImgDecorations/index.vue';
 import ImgCharacter from './ImgCharacter/index.vue';
 
@@ -98,10 +99,42 @@ export default {
       DecorationAnimations,
 
       characters: [
-        { name: 'archer', animations: ArcherAnimations },
-        { name: 'wizard', animations: WizardAnimations },
-        { name: 'swordsman', animations: SwordsmanAnimations },
-        { name: 'skeleton', animations: SkeletonAnimations },
+        {
+          name: 'archer',
+          animations: ArcherAnimations,
+          attacks: {
+            attack: { damage: 8 },
+            attack2: { damage: 10 },
+            attack3: { damage: 16 },
+          },
+        },
+        {
+          name: 'wizard',
+          animations: WizardAnimations,
+          attacks: {
+            attack: { damage: 10 },
+            attack2: { damage: 15 },
+            attack3: { damage: 20 },
+          },
+        },
+        {
+          name: 'swordsman',
+          animations: SwordsmanAnimations,
+          attacks: {
+            attack: { damage: 15 },
+            attack2: { damage: 20 },
+            attack3: { damage: 25 },
+          },
+        },
+        {
+          name: 'skeleton',
+          animations: SkeletonAnimations,
+          attacks: {
+            attack: { damage: 5 },
+            attack2: { damage: 7 },
+            attack3: { damage: 10 },
+          },
+        },
       ],
 
       keyPressed: 'idle',
@@ -154,6 +187,8 @@ export default {
           attack2: { damage: 10 },
           attack3: { damage: 16 },
         },
+
+        inventory: Inventory,
       },
       showShop: false,
       showInventory: false,
@@ -225,6 +260,7 @@ export default {
       );
       const nextIndex = (currentIndex + 1) % this.characters.length;
       this.player.currentCharacter = this.characters[nextIndex];
+      this.player.attacks = this.characters[nextIndex].attacks;
     },
 
     collectCoin({ currencyId }) {

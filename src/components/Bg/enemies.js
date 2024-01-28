@@ -4,8 +4,8 @@ export default {
       enemyId: 'war',
       initialCharacter: 'Warrior',
       initialPositionX: 1100,
-      initialHealth: 30,
-      initialMaxHealth: 30,
+      initialHealth: 130,
+      initialMaxHealth: 130,
       initialAttacks: {
         attack: { damage: 8 },
         attack2: { damage: 10 },
@@ -16,10 +16,10 @@ export default {
           currencyId: 'silver', type: 'coin', amount: 5, chance: 0.5,
         },
         {
-          currencyId: 'gold', type: 'coin', amount: 3, chance: 0.3,
+          currencyId: 'gold', type: 'coin', amount: 1, chance: 0.3,
         },
         {
-          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.1,
+          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.01,
         },
       ],
     },
@@ -27,8 +27,8 @@ export default {
       enemyId: 'war1',
       initialCharacter: 'Warrior',
       initialPositionX: 1900,
-      initialHealth: 30,
-      initialMaxHealth: 30,
+      initialHealth: 130,
+      initialMaxHealth: 130,
       initialAttacks: {
         attack: { damage: 8 },
         attack2: { damage: 10 },
@@ -39,10 +39,10 @@ export default {
           currencyId: 'silver', type: 'coin', amount: 5, chance: 0.5,
         },
         {
-          currencyId: 'gold', type: 'coin', amount: 3, chance: 0.3,
+          currencyId: 'gold', type: 'coin', amount: 1, chance: 0.3,
         },
         {
-          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.1,
+          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.01,
         },
       ],
     },
@@ -50,8 +50,8 @@ export default {
       enemyId: 'war2',
       initialCharacter: 'Warrior',
       initialPositionX: 2600,
-      initialHealth: 30,
-      initialMaxHealth: 30,
+      initialHealth: 130,
+      initialMaxHealth: 130,
       initialAttacks: {
         attack: { damage: 8 },
         attack2: { damage: 10 },
@@ -62,10 +62,10 @@ export default {
           currencyId: 'silver', type: 'coin', amount: 5, chance: 0.5,
         },
         {
-          currencyId: 'gold', type: 'coin', amount: 3, chance: 0.3,
+          currencyId: 'gold', type: 'coin', amount: 1, chance: 0.3,
         },
         {
-          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.1,
+          currencyId: 'blue', type: 'gem', amount: 1, chance: 0.01,
         },
       ],
     },
