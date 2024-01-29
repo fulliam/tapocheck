@@ -29,10 +29,15 @@ export default {
         if (!this.scrollInterval) {
           this.scrollInterval = setInterval(() => {
             speed = this.keyPressed === 'run' ? this.player.runningSpeed : this.player.walkingSpeed;
-            const proposedX = this.positionX + (((this.isFacingLeft ? -1 : 1) * speed) / 4);
-            if (proposedX >= 0 && proposedX <= this.screenWidth - 100) {
-              this.positionX = proposedX;
+            let proposedX = this.positionX + (((this.isFacingLeft ? -1 : 1) * speed) / 4);
+
+            if (proposedX < 0) {
+              proposedX = 0;
+            } else if (proposedX > this.screenWidth - this.characterWidth) {
+              proposedX = this.screenWidth - this.characterWidth;
             }
+
+            this.positionX = proposedX;
             this.updateCharacterPositionX();
             emitter.emit('update:position', { direction, speed, playerPositionX: this.positionX });
           }, 20);
@@ -217,14 +222,23 @@ export default {
       const attack = this.player.attacks[attackType];
       const direction = this.isFacingLeft ? 'left' : 'right';
 
+      const isCrit = Math.random() < this.player.critChance;
+
+      let finalAttack = attack;
+
+      if (isCrit) {
+        finalAttack = { ...attack, damage: attack.damage * this.player.critFactor };
+      }
+
       if (this.player.currentCharacter.name === 'archer' && (attackType === 'attack2' || attackType === 'attack3')) {
         this.shootArrow(attackType);
       }
 
       emitter.emit('character-attack', {
-        damage: attack.damage,
+        damage: finalAttack.damage,
         enemyId: this.enemyId,
         direction,
+        isCrit,
       });
     },
 

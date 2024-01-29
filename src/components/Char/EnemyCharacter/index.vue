@@ -14,7 +14,7 @@
     :state="enemyState"
     :animationSpeed="enemyAnimationSpeed"
     :enemyId="enemyId"
-    :style="{ filter: enemyIsDead ? 'drop-shadow(0px 0px 4px yellow)' : 'none',
+    :style="{ filter: enemyIsDead ? 'drop-shadow(0px 0px 4px #ccc)' : 'none',
               zIndex: enemyIsDead ? '1020' : 'none',
             }"
     @click="toggleEnemyInventory"
@@ -23,11 +23,11 @@
   />
 
   <DamageIndicator
-    v-for="(damage, index) in damageIndicators"
+    v-for="(indicate, index) in damageIndicators"
     :key="index"
-    :damage="damage"
+    :damage="indicate.damage"
     :positionX="positionX"
-    :color="'orange'"
+    :color="indicate.isCrit ? 'white' : 'orange'"
     @animation-end="removeDamageIndicator(index)"
   />
 
@@ -47,6 +47,10 @@ import { WarmorAnimations } from '@/assets/char/enemy/warmor/WarmorAnimations';
 import { orcWarriorAnimations } from '@/assets/char/enemy/orcs/warrior/OrcWarriorAnimations';
 import { orcShamanAnimations } from '@/assets/char/enemy/orcs/shaman/OrcShamanAnimations';
 import { orcBerserkAnimations } from '@/assets/char/enemy/orcs/berserk/OrcBerserkAnimations';
+
+import { blueSlimeAnimations } from '@/assets/char/enemy/slimes/blue/BlueSlimeAnimations';
+import { greenSlimeAnimations } from '@/assets/char/enemy/slimes/green/GreenSlimeAnimations';
+import { redSlimeAnimations } from '@/assets/char/enemy/slimes/red/RedSlimeAnimations';
 
 import ImgEnemyCharacter from './ImgEnemyCharacter/index.vue';
 import behavior from './behavior';
@@ -125,6 +129,12 @@ export default {
   computed: {
     enemyImages() {
       switch (this.currentCharacter) {
+        case 'blueSlime':
+          return blueSlimeAnimations[this.enemyState];
+        case 'greenSlime':
+          return greenSlimeAnimations[this.enemyState];
+        case 'redSlime':
+          return redSlimeAnimations[this.enemyState];
         case 'orcWarrior':
           return orcWarriorAnimations[this.enemyState];
         case 'orcShaman':
@@ -158,7 +168,7 @@ export default {
 
     healthBarPosition() {
       return {
-        left: `calc(${this.positionX}px + 60px)`,
+        left: `calc(${this.positionX}px + 15%)`,
         top: this.currentAct !== 'ActVI' ? '42%' : '62%',
       };
     },
@@ -166,7 +176,8 @@ export default {
     styleEnemyInAct() {
       if (this.currentCharacter === 'Spirit') {
         return {
-          bottom: this.currentAct !== 'ActVI' ? '15%' : '0%',
+          bottom: this.currentAct !== 'ActVI' ? '30%' : '15%',
+          height: '30%',
         };
       }
       if (this.currentCharacter.includes('orc')) {
@@ -199,7 +210,7 @@ export default {
 
   methods: {
     switchCharacter() {
-      const characters = ['orcWarrior', 'orcShaman', 'orcBerserk', 'Spirit', 'Warmor', 'Warrior', 'Paladin'];
+      const characters = ['blueSlime', 'greenSlime', 'redSlime', 'orcWarrior', 'orcShaman', 'orcBerserk', 'Spirit', 'Warmor', 'Warrior', 'Paladin'];
       let currentIndex = characters.indexOf(this.currentCharacter);
       currentIndex = (currentIndex + 1) % characters.length;
       this.currentCharacter = characters[currentIndex];

@@ -74,6 +74,7 @@ import { ArcherAnimations } from '@/assets/char/ally/archer/ArcherAnimations';
 import { SwordsmanAnimations } from '@/assets/char/ally/swordsman/SwordsmanAnimations';
 import { WizardAnimations } from '@/assets/char/ally/wizard/WizardAnimations';
 import { SkeletonAnimations } from '@/assets/char/ally/skeleton/SkeletonAnimations';
+
 // only runSmoke is used, need fix imports
 import { DecorationAnimations } from '@/assets/decorations/DecorationAnimations';
 
@@ -83,6 +84,7 @@ import ImgCharacter from './ImgCharacter/index.vue';
 
 import Control from './control';
 import ControlButtons from './ControlButtons/index.vue';
+
 import CharInventory from '../../PlayerContent/CharInventory/index.vue';
 import CharShop from '../../PlayerContent/CharShop/index.vue';
 
@@ -107,6 +109,7 @@ export default {
   data() {
     return {
       screenWidth: window.innerWidth,
+      characterWidth: 300,
 
       DecorationAnimations,
 
@@ -142,9 +145,9 @@ export default {
           name: 'skeleton',
           animations: SkeletonAnimations,
           attacks: {
-            attack: { damage: 5 },
-            attack2: { damage: 7 },
-            attack3: { damage: 10 },
+            attack: { damage: 15 },
+            attack2: { damage: 17 },
+            attack3: { damage: 20 },
           },
         },
       ],
@@ -200,10 +203,15 @@ export default {
           attack3: { damage: 16 },
         },
 
+        critChance: 0.1,
+        critFactor: 2,
+
         inventory: Inventory,
       },
+
       showShop: false,
       showInventory: false,
+
       damageIndicators: [],
     };
   },

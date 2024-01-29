@@ -56,17 +56,19 @@ export default {
       this.playerPositionX = playerPositionX;
     },
 
-    applyDamage({ damage, enemyId, direction }) {
+    applyDamage({
+      damage, enemyId, direction, isCrit,
+    }) {
       const isFacingEnemy = (this.direction === 1 && direction === 'left')
                         || (this.direction === -1 && direction === 'right');
 
       if (this.enemyState === 'dead') {
         return;
       }
-
+      console.log(isCrit);
       if (this.enemyId === enemyId && isFacingEnemy) {
         this.health -= damage;
-        this.damageIndicators.push(damage);
+        this.damageIndicators.push({ damage, isCrit });
         if (this.health <= 0) {
           clearInterval(this.enemyInterval);
           clearInterval(this.enemyStateInterval);

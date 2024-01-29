@@ -22,7 +22,14 @@
         alt=" "
       />
       <div v-if="cell.quantity !== 0" class="quantity">{{ cell.quantity }}</div>
-      <div v-if="cell.description" class="tooltip">{{ cell.description }}</div>
+      <div v-if="cell.description" class="tooltip">
+        {{ cell.description }}
+        <span
+          :style="{ color: rarityColors[cell.rarity] }"
+        >
+          {{ cell.rarity }}
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -118,6 +125,15 @@ export default {
         unique: 'radial-gradient(circle at center, #1E90FF, #00008B)', // Синий градиент
         mythic: 'radial-gradient(circle at center, #EE82EE, #4B0082)', // Фиолетовый градиент
         legendary: 'radial-gradient(circle at center, #FFD700, #8B6508)', // Золотой градиент
+      };
+    },
+    rarityColors() {
+      return {
+        common: '#c0c0c0', // Серый
+        rare: '#7FFF00', // Зеленый
+        unique: ' #1E90FF', // Синий
+        mythic: '#EE82EE', // Фиолетовый
+        legendary: '#FFD700', // Золотой
       };
     },
   },
