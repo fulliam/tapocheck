@@ -22,6 +22,7 @@ export default {
           currencyId: 'blue', type: 'gem', amount: 1, chance: 0.01,
         },
       ],
+      inventory: [],
     },
     {
       enemyId: 'war1',
@@ -45,6 +46,7 @@ export default {
           currencyId: 'blue', type: 'gem', amount: 1, chance: 0.01,
         },
       ],
+      inventory: [],
     },
     {
       enemyId: 'war2',
@@ -68,6 +70,7 @@ export default {
           currencyId: 'blue', type: 'gem', amount: 1, chance: 0.01,
         },
       ],
+      inventory: [],
     },
   ],
   ActII: [
@@ -102,6 +105,7 @@ export default {
           currencyId: 'grey', type: 'gem', amount: 3, chance: 0.1,
         },
       ],
+      inventory: [],
     },
     {
       enemyId: 'pal1',
@@ -125,6 +129,7 @@ export default {
           currencyId: 'red', type: 'gem', amount: 3, chance: 0.1,
         },
       ],
+      inventory: [],
     },
     {
       enemyId: 'pal2',
@@ -148,6 +153,7 @@ export default {
           currencyId: 'red', type: 'gem', amount: 2, chance: 0.1,
         },
       ],
+      inventory: [],
     },
   ],
   ActVI: [
@@ -173,6 +179,7 @@ export default {
           currencyId: 'grey', type: 'gem', amount: 3, chance: 0.1,
         },
       ],
+      inventory: [],
     },
     {
       enemyId: 'spirit2',
@@ -196,6 +203,7 @@ export default {
           currencyId: 'grey', type: 'gem', amount: 3, chance: 0.1,
         },
       ],
+      inventory: [],
     },
   ],
 };

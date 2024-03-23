@@ -31,7 +31,7 @@ export default {
 
   data() {
     return {
-      position: 55,
+      position: 40,
       opacity: 1,
     };
   },

@@ -20,7 +20,7 @@
     v-for="(damage, index) in damageIndicators"
     :key="index"
     :damage="damage"
-    :positionX="positionX"
+    :positionX="positionX + 130"
     :color="'red'"
     @animation-end="removeDamageIndicator(index)"
   />

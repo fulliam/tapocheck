@@ -308,6 +308,8 @@ export default {
       if (this.player.health <= 0) {
         this.keyPressed = 'dead';
         this.player.health = 0;
+        document.removeEventListener('keydown', this.handleKeyDown);
+        document.removeEventListener('keyup', this.handleKeyUp);
 
         emitter.emit('character-dead' /* who is dead? */);
       }

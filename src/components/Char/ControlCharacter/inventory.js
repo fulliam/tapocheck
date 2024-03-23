@@ -4,14 +4,14 @@ const Inventory = [
   {
     id: 1,
     quantity: 0,
-    image: ItemImages.armor.heavy.set1.belt,
+    image: ItemImages.armor.heavy.belt,
     rarity: 'common',
     description: 'Описание предмета 1',
   },
   {
     id: 2,
     quantity: '?',
-    image: ItemImages.armor.light.set2.chest,
+    image: ItemImages.armor.light.chest,
     rarity: 'rare',
     description: 'Описание предмета 1',
   },

@@ -31,6 +31,7 @@
             :attackRange="enemy.attackRange"
             :currencyDrop="enemy.currencyDrop"
             :currentAct="getCurrentAct()"
+            :initialInventory="enemy.inventory"
           />
         </template>
 
@@ -98,6 +99,14 @@ export default {
   },
 
   mounted() {
+    /*
+    Object.keys(this.enemies).forEach((act) => {
+      this.enemies[act] = this.enemies[act].map((enemy) => ({
+        ...enemy,
+        inventory: this.generateRandomInventory(this.player.level),
+      }));
+    });
+    */
     this.setLoadingState();
     emitter.on('prevAct', this.prevAct);
     emitter.on('nextAct', this.nextAct);
