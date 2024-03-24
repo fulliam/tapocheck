@@ -27,7 +27,7 @@ jobs:
         git config user.email "fordevjob@gmail.com"
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@5  # Обновлено до версии 5
+      uses: JamesIves/github-pages-deploy-action@4  # Обновлено до версии 4
       with:
         branch: gh-pages   # The branch the action should deploy to.
         folder: dist     # The folder the action should deploy.
